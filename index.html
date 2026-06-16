@@ -1,0 +1,1544 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kinabalu — A Journey to the Roof of Borneo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:ital,wght@0,300;0,400;0,500;1,300&display=swap"
+    rel="stylesheet">
+  <style>
+    /* ─── Reset ─── */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --accent: #FF6A3D;
+      --bg: #0D0D0D;
+      --text: #F5F0EB;
+      --dim: #6E6560;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    /* ─── Progress bar ─── */
+    #bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 2px;
+      width: 0%;
+      background: var(--accent);
+      z-index: 999;
+    }
+
+    /* ─── Nav ─── */
+    nav {
+      position: fixed;
+      inset: 0 0 auto;
+      z-index: 100;
+      padding: 1.6rem 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      mix-blend-mode: difference;
+      pointer-events: none;
+    }
+
+    nav * {
+      pointer-events: all;
+    }
+
+    .nav-logo {
+      font-family: 'Anton', sans-serif;
+      font-size: 1.15rem;
+      letter-spacing: .12em;
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 2.5rem;
+    }
+
+    .nav-links a {
+      color: #fff;
+      text-decoration: none;
+      font-size: .67rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      opacity: .45;
+      transition: opacity .2s;
+    }
+
+    .nav-links a:hover {
+      opacity: 1;
+    }
+
+    /* ─── Hero ─── */
+    #hero {
+      position: relative;
+      height: 100vh;
+      min-height: 640px;
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+    }
+
+    #hero-bg {
+      position: absolute;
+      inset: -15% 0;
+      background: url('images/d5-kk.JPG') center 30% / cover no-repeat;
+      will-change: transform;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom,
+          rgba(13, 13, 13, .1) 0%,
+          rgba(13, 13, 13, 0) 35%,
+          rgba(13, 13, 13, .82) 100%);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 0 2.5rem 4.5rem;
+      width: 100%;
+    }
+
+    .hero-eye {
+      font-size: .68rem;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    .hero-title {
+      font-family: 'Anton', sans-serif;
+      font-size: clamp(5rem, 19vw, 21rem);
+      line-height: .82;
+      color: #fff;
+      mix-blend-mode: difference;
+    }
+
+    .hero-sub {
+      margin-top: 1.8rem;
+      font-size: clamp(.85rem, 1.2vw, 1rem);
+      line-height: 1.75;
+      color: var(--dim);
+      max-width: 42ch;
+    }
+
+    .scroll-cue {
+      position: absolute;
+      bottom: 2.5rem;
+      right: 2.5rem;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .75rem;
+    }
+
+    .scroll-cue-label {
+      font-size: .6rem;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: var(--dim);
+      writing-mode: vertical-rl;
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 54px;
+      background: var(--dim);
+      transform-origin: top;
+    }
+
+    /* ─── Chapter intro blocks ─── */
+    .chapter-intro {
+      padding: 9rem 2.5rem 5rem;
+      max-width: 1440px;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ghost {
+      font-family: 'Anton', sans-serif;
+      font-size: clamp(9rem, 22vw, 24rem);
+      line-height: 1;
+      color: rgba(255, 255, 255, .03);
+      position: absolute;
+      right: -.05em;
+      top: 2.5rem;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .ch-label {
+      display: inline-flex;
+      align-items: center;
+      gap: .9rem;
+      font-size: .67rem;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.6rem;
+    }
+
+    .ch-label::before {
+      content: '';
+      display: block;
+      width: 34px;
+      height: 1px;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .ch-heading {
+      font-family: 'Anton', sans-serif;
+      font-size: clamp(3.5rem, 9.5vw, 10rem);
+      line-height: .88;
+      max-width: 14ch;
+    }
+
+    /* ─── Section heading letter-split effect ─── */
+    /* Default: outlined translucent letters with accent stroke */
+    .heading-letter {
+      display: inline-block;
+      -webkit-text-fill-color: transparent;
+      -webkit-text-stroke: 1.5px #FF6A3D;
+      color: transparent;
+      transition: -webkit-text-fill-color 0.4s ease, color 0.4s ease;
+    }
+
+    /* Hover: letters fill solid accent */
+    .ch-heading:hover .heading-letter,
+    .par-heading:hover .heading-letter {
+      -webkit-text-fill-color: #FF6A3D;
+      color: #FF6A3D;
+    }
+
+    .ch-body {
+      margin-top: 2.5rem;
+      font-size: clamp(.92rem, 1.2vw, 1.05rem);
+      line-height: 1.95;
+      color: var(--dim);
+      max-width: 58ch;
+    }
+
+    .interlude-intro {
+      padding: 7rem 2.5rem 4rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* ─── Slide-wrap — every animated image container ─── */
+    .sw {
+      overflow: hidden;
+      position: relative;
+      display: block;
+    }
+
+    .sw img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transform-origin: center center;
+      /* GPU-composite every animated image so transforms never drop frames */
+      will-change: transform, opacity;
+      backface-visibility: hidden;
+    }
+
+    /* Aspect ratios inside grid containers */
+    .pair .sw {
+      aspect-ratio: 3/2;
+    }
+
+    .pair.tall .sw {
+      aspect-ratio: 2/3;
+    }
+
+    .trio .sw {
+      aspect-ratio: 4/3;
+    }
+
+    .trio.portrait .sw {
+      aspect-ratio: 3/4;
+    }
+
+    /* Aspect ratio for standalone bleed-type wraps */
+    .sw.bleed-xl {
+      height: 95vh;
+    }
+
+    .sw.bleed-lg {
+      height: 80vh;
+    }
+
+    .sw.bleed-md {
+      height: 65vh;
+    }
+
+    .sw.bleed-sm {
+      height: 48vh;
+    }
+
+    /* ─── Full-bleed parallax images (no slide animation) ─── */
+    .bleed {
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .bleed-xl {
+      height: 95vh;
+    }
+
+    .bleed-lg {
+      height: 80vh;
+    }
+
+    .bleed-md {
+      height: 65vh;
+    }
+
+    .bleed>img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      will-change: transform;
+    }
+
+    /* ─── Parallax section hero ─── */
+    .par-section {
+      position: relative;
+      height: 100vh;
+      min-height: 640px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+    }
+
+    .par-bg {
+      position: absolute;
+      inset: -20%;
+      background-size: cover;
+      background-position: center;
+      will-change: transform;
+    }
+
+    .par-veil {
+      position: absolute;
+      inset: 0;
+      background: rgba(13, 13, 13, .52);
+    }
+
+    .par-content {
+      position: relative;
+      z-index: 2;
+      padding: 0 2.5rem;
+      width: 100%;
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+
+    .par-num {
+      font-family: 'Anton', sans-serif;
+      font-size: clamp(9rem, 22vw, 24rem);
+      line-height: 1;
+      color: rgba(255, 255, 255, .06);
+      user-select: none;
+    }
+
+    .par-heading {
+      font-family: 'Anton', sans-serif;
+      font-size: clamp(4rem, 11vw, 13rem);
+      line-height: .88;
+      margin-top: -.15em;
+    }
+
+    /* ─── Pair + trio grid layouts ─── */
+    .pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+    }
+
+    .pair.asym {
+      grid-template-columns: 3fr 2fr;
+      height: 52vh;
+      align-items: stretch;
+    }
+
+    .pair.asym-flip {
+      grid-template-columns: 2fr 3fr;
+      height: 52vh;
+      align-items: stretch;
+    }
+
+    .pair.asym .sw,
+    .pair.asym-flip .sw {
+      height: 100%;
+      aspect-ratio: unset;
+    }
+
+    .trio {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+    }
+
+    /* ─── Split layout ─── */
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 70vh;
+    }
+
+    .split .sw {
+      min-height: 55vh;
+    }
+
+    .split-text {
+      padding: 5.5rem 3.5rem 5.5rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 1.4rem;
+    }
+
+    .split.img-left .split-text {
+      padding: 5.5rem 2.5rem 5.5rem 3.5rem;
+    }
+
+    .split-text .body {
+      font-size: clamp(.92rem, 1.25vw, 1.05rem);
+      line-height: 1.95;
+      color: var(--dim);
+      max-width: 44ch;
+    }
+
+    /* ─── Pull quote ─── */
+    .pullquote {
+      padding: 9rem 2.5rem;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .pullquote p {
+      font-family: 'Anton', sans-serif;
+      font-size: clamp(2.2rem, 5.5vw, 5.2rem);
+      line-height: 1.07;
+    }
+
+    .pullquote em {
+      color: var(--accent);
+      font-style: normal;
+    }
+
+    /* ─── Final quote: letter morph + cursor tilt ─── */
+    /* The cursor tilt is applied via JS inline transform;
+       transition here keeps it smooth and elastic */
+    #final-quote {
+      transition: transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      will-change: transform;
+      transform-origin: center center;
+    }
+
+    /* Each letter is inline-block so CSS transforms work */
+    .morph-letter {
+      display: inline-block;
+      animation: letter-morph var(--dur, 3s) ease-in-out infinite;
+      animation-delay: var(--del, 0s);
+    }
+
+    /* Subtle shape-shifting: small scale/skew/rotate oscillation.
+       Values are intentionally tiny to preserve readability. */
+    @keyframes letter-morph {
+
+      0%,
+      100% {
+        transform: scale(1) skewX(0deg) rotate(0deg);
+      }
+
+      20% {
+        transform: scale(1.032) skewX(1.1deg) rotate(0.32deg);
+      }
+
+      45% {
+        transform: scale(0.971) skewX(-0.75deg) rotate(-0.22deg);
+      }
+
+      70% {
+        transform: scale(1.018) skewX(0.55deg) rotate(0.18deg);
+      }
+
+      85% {
+        transform: scale(0.988) skewX(-0.38deg) rotate(-0.12deg);
+      }
+    }
+
+    /* ─── Spacing ─── */
+    .gap-xl {
+      height: 11rem;
+    }
+
+    .gap-lg {
+      height: 7rem;
+    }
+
+    .gap-sm {
+      height: 4px;
+    }
+
+    /* ─── Footer ─── */
+    footer {
+      padding: 7rem 2.5rem 4.5rem;
+      border-top: 1px solid rgba(255, 255, 255, .07);
+    }
+
+    .footer-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .footer-wm {
+      font-family: 'Anton', sans-serif;
+      font-size: clamp(4rem, 10vw, 11rem);
+      line-height: .85;
+      color: rgba(255, 255, 255, .07);
+    }
+
+    .footer-meta {
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      gap: .5rem;
+    }
+
+    .footer-meta span {
+      font-size: .7rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--dim);
+    }
+
+    .footer-meta .hi {
+      color: var(--accent);
+    }
+
+    .footer-meta .name {
+      color: var(--text);
+      font-size: .88rem;
+      letter-spacing: .05em;
+    }
+
+    /* ─── Kinetic marquee strip ─── */
+    .marquee-strip {
+      overflow: hidden;
+      padding: 1.4rem 0;
+      border-top: 1px solid rgba(255, 106, 61, .2);
+      border-bottom: 1px solid rgba(255, 106, 61, .2);
+    }
+
+    .marquee-track {
+      display: flex;
+      white-space: nowrap;
+      will-change: transform;
+      /* 4 identical copies; animate exactly one copy-width left for a seamless loop */
+      animation: marquee-scroll 18s linear infinite;
+    }
+
+    .marquee-item {
+      font-family: 'Anton', sans-serif;
+      font-size: clamp(1.8rem, 3vw, 3rem);
+      color: var(--accent);
+      letter-spacing: .08em;
+      padding-right: 2.5em;
+      flex-shrink: 0;
+      user-select: none;
+    }
+
+    @keyframes marquee-scroll {
+      from {
+        transform: translateX(0);
+      }
+
+      to {
+        transform: translateX(-25%);
+      }
+    }
+
+    /* ─── Mobile ─── */
+    @media (max-width: 800px) {
+      .nav-links {
+        display: none;
+      }
+
+      .scroll-cue {
+        display: none;
+      }
+
+      .hero-content {
+        padding: 0 1.5rem 3.5rem;
+      }
+
+      .chapter-intro {
+        padding: 5rem 1.5rem 3rem;
+      }
+
+      .ghost {
+        display: none;
+      }
+
+      .interlude-intro {
+        padding: 5rem 1.5rem 3rem;
+      }
+
+      .pair,
+      .pair.asym,
+      .pair.asym-flip {
+        grid-template-columns: 1fr;
+        height: auto;
+        align-items: unset;
+      }
+
+      .pair .sw,
+      .pair.tall .sw {
+        aspect-ratio: 4/3;
+      }
+
+      .pair.asym .sw,
+      .pair.asym-flip .sw {
+        height: auto;
+        aspect-ratio: 4/3;
+      }
+
+      .trio {
+        grid-template-columns: 1fr;
+      }
+
+      .trio .sw,
+      .trio.portrait .sw {
+        aspect-ratio: 4/3;
+      }
+
+      .split {
+        grid-template-columns: 1fr;
+        min-height: unset;
+      }
+
+      .split .sw {
+        min-height: 56vw;
+        order: -1 !important;
+      }
+
+      .split-text,
+      .split.img-left .split-text {
+        padding: 3rem 1.5rem;
+      }
+
+      .sw.bleed-xl,
+      .bleed-xl {
+        height: 70vw;
+      }
+
+      .sw.bleed-lg,
+      .bleed-lg {
+        height: 60vw;
+      }
+
+      .sw.bleed-md,
+      .bleed-md {
+        height: 55vw;
+      }
+
+      .par-section {
+        height: 80vw;
+        min-height: unset;
+      }
+
+      .par-content {
+        padding: 0 1.5rem;
+      }
+
+      .pullquote {
+        padding: 5rem 1.5rem;
+      }
+
+      .gap-xl {
+        height: 6rem;
+      }
+
+      .gap-lg {
+        height: 4rem;
+      }
+
+      .footer-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2rem;
+      }
+
+      .footer-meta {
+        text-align: left;
+      }
+
+      footer {
+        padding: 4rem 1.5rem 3rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="bar"></div>
+
+  <!-- ── Nav ── -->
+  <nav>
+    <a href="#hero" class="nav-logo">Kinabalu</a>
+    <ul class="nav-links">
+      <li><a href="#arrival">01 Arrival</a></li>
+      <li><a href="#kundasang">02 Kundasang</a></li>
+      <li><a href="#summit">03 Summit</a></li>
+      <li><a href="#via-ferrata">04 Via Ferrata</a></li>
+    </ul>
+  </nav>
+
+
+  <!-- ══════════════════════════════════════════
+     HERO
+══════════════════════════════════════════ -->
+  <section id="hero">
+    <div id="hero-bg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <p class="hero-eye" id="hero-eye">Sabah, Malaysia &middot; June 2025</p>
+      <h1 class="hero-title" id="hero-title">KINABALU</h1>
+      <p class="hero-sub" id="hero-sub">A journey to the roof of Borneo &mdash;&nbsp;4,095&nbsp;metres above the South
+        China Sea.</p>
+    </div>
+    <div class="scroll-cue" id="scroll-cue">
+      <span class="scroll-cue-label">Scroll</span>
+      <div class="scroll-line" id="scroll-line"></div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════
+     01 — ARRIVAL
+     Animations: wipe-from-left, wipe-from-right,
+     slide-from-top, fade-zoom, slide-from-bottom
+══════════════════════════════════════════ -->
+  <section id="arrival">
+    <div class="chapter-intro">
+      <span class="ghost" aria-hidden="true">01</span>
+      <p class="ch-label fu">Kota Kinabalu</p>
+      <h2 class="ch-heading">Arrival</h2>
+      <p class="ch-body fu">
+        The South China Sea glittered from the taxi window. Kota Kinabalu, seen from the air, is a city that knows
+        exactly where it stands — a Malaysian port town pressed between open water and a solid green wall of mountain.
+        Jetlagged and overheating, we dropped our bags, found cold Milo, and walked to the nearest waterfront. The next
+        morning we were on a boat to Sapi Island, masks fogging, following sea turtles through water too blue to be
+        trusted. For one whole day, we let the mountain wait.
+      </p>
+    </div>
+
+    <!-- Jesselton + Kundasang: wipe-left / wipe-right -->
+    <div class="pair">
+      <div class="sw cl"><img src="images/d2-jesselton.jpg" alt="Jesselton Point, Kota Kinabalu" loading="lazy"></div>
+      <div class="sw cr"><img src="images/d2-kundasang.jpg" alt="View toward Kundasang" loading="lazy"></div>
+    </div>
+
+    <div class="gap-sm"></div>
+
+    <!-- Snorkelling trio: slide-top / fade-zoom / slide-bottom -->
+    <div class="trio">
+      <div class="sw ft"><img src="images/d2-snorkelling.jpg" alt="Snorkelling, Sapi Island" loading="lazy"></div>
+      <div class="sw zn"><img src="images/d2-snorkelling3.jpg" alt="Underwater, Sapi Island" loading="lazy"></div>
+      <div class="sw fb"><img src="images/d2-snorkelling4.jpg" alt="Sea life, Sapi Island" loading="lazy"></div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════
+     02 — KUNDASANG
+     Animations: slide-left, wipe-left/right,
+     fade-zoom, skew, slide-top/bottom
+══════════════════════════════════════════ -->
+  <div class="marquee-strip" aria-hidden="true">
+    <div class="marquee-track">
+      <span class="marquee-item">KOTA KINABALU&ensp;&bull;&ensp;KUNDASANG&ensp;&bull;&ensp;MOUNT
+        KINABALU&ensp;&bull;&ensp;VIA FERRATA&ensp;&bull;&ensp;SUMMIT</span>
+      <span class="marquee-item">KOTA KINABALU&ensp;&bull;&ensp;KUNDASANG&ensp;&bull;&ensp;MOUNT
+        KINABALU&ensp;&bull;&ensp;VIA FERRATA&ensp;&bull;&ensp;SUMMIT</span>
+      <span class="marquee-item">KOTA KINABALU&ensp;&bull;&ensp;KUNDASANG&ensp;&bull;&ensp;MOUNT
+        KINABALU&ensp;&bull;&ensp;VIA FERRATA&ensp;&bull;&ensp;SUMMIT</span>
+      <span class="marquee-item">KOTA KINABALU&ensp;&bull;&ensp;KUNDASANG&ensp;&bull;&ensp;MOUNT
+        KINABALU&ensp;&bull;&ensp;VIA FERRATA&ensp;&bull;&ensp;SUMMIT</span>
+    </div>
+  </div>
+  <section id="kundasang">
+    <div class="chapter-intro">
+      <span class="ghost" aria-hidden="true">02</span>
+      <p class="ch-label fu">Day Three &middot; 1,500m</p>
+      <h2 class="ch-heading">The Drive to<br>Kundasang</h2>
+      <p class="ch-body fu">
+        The road out of KK winds upward through palm oil and dense rainforest until the air suddenly cools and
+        everything shifts to a different shade of green. Kundasang sits at 1,500 metres — a highland valley that grows
+        strawberries and vegetables for half of Sabah. We pulled off at Sosodikon Hill to watch the evening light drag
+        long shadows across the valley floor. The mountain wasn't visible yet. It hid behind its own cloud. We ate at a
+        hawker stall, the kind where the tables wobble and the laksa is perfect, and went to bed early. Tomorrow we
+        would register at the park.
+      </p>
+    </div>
+
+    <!-- Full-bleed valley opener (parallax only) -->
+    <div class="bleed bleed-xl">
+      <img src="images/d3-kundasang.JPG" alt="Kundasang valley" loading="lazy" class="par-img">
+    </div>
+
+    <div class="gap-sm"></div>
+
+    <!-- Kundasang detail: slide from left into split -->
+    <div class="split img-left">
+      <div class="sw fl"><img src="images/d3-kundasang2.jpg" alt="Kundasang village" loading="lazy"></div>
+      <div class="split-text">
+        <p class="ch-label fu">The highlands</p>
+        <p class="body fu">
+          At 1,500 metres the air smells different — a coolness cut with woodsmoke and wet earth. It's highland
+          Southeast Asia: strawberry farms and warung stalls and school buses on mountain roads. The kind of place that
+          slows you down before you realise it's happened.
+        </p>
+      </div>
+    </div>
+
+    <div class="gap-sm"></div>
+
+    <!-- Farm pair: slide-right / slide-left -->
+    <div class="pair">
+      <div class="sw fr"><img src="images/d3-farm.JPG" alt="Strawberry farm, Kundasang" loading="lazy"></div>
+      <div class="sw fl"><img src="images/d3-farm2.JPG" alt="Vegetable terraces" loading="lazy"></div>
+    </div>
+
+    <div class="gap-sm"></div>
+
+    <!-- Farm trio: wipe-left / fade-zoom / wipe-right -->
+    <div class="trio">
+      <div class="sw cl"><img src="images/d3-farm3.JPG" alt="Farm, Kundasang" loading="lazy"></div>
+      <div class="sw zn"><img src="images/d3-farm4.JPG" alt="Strawberry fields" loading="lazy"></div>
+      <div class="sw cr"><img src="images/d3-farm5.jpg" alt="Harvest, Kundasang" loading="lazy"></div>
+    </div>
+
+    <div class="gap-sm"></div>
+
+    <!-- ATV split: skew-in from right -->
+    <div class="split img-right">
+      <div class="split-text">
+        <p class="ch-label fu">Before the climb</p>
+        <p class="body fu">
+          The day before the climb we rode ATVs through red mud, visited a cattle ranch where the cows were indifferent
+          to us in a deeply reassuring way, and ate strawberries still warm from the plant. It felt important to fill up
+          on ordinary pleasures while we still could.
+        </p>
+      </div>
+      <div class="sw sk"><img src="images/d3-atv.JPEG" alt="ATV ride, Kundasang" loading="lazy"></div>
+    </div>
+
+    <div class="gap-sm"></div>
+
+    <!-- Anooh ranch pair: skew / slide-left -->
+    <div class="pair asym">
+      <div class="sw fl"><img src="images/d3-anooh.JPG" alt="Anooh Ranch" loading="lazy"></div>
+      <div class="sw sk"><img src="images/d3-anooh2.jpg" alt="Cattle, Anooh Ranch" loading="lazy"></div>
+    </div>
+
+    <div class="gap-sm"></div>
+
+    <!-- Sosodikon full-bleed (parallax only) -->
+    <div class="bleed bleed-lg">
+      <img src="images/d3-sosodikon.JPG" alt="Sosodikon Hill at dusk" loading="lazy" class="par-img">
+    </div>
+
+    <div class="gap-sm"></div>
+
+    <!-- Sosodikon trio: slide-top / slide-bottom / slide-top -->
+    <div class="trio">
+      <div class="sw ft"><img src="images/d3-sosodikon2.JPG" alt="Sosodikon Hill views" loading="lazy"></div>
+      <div class="sw fb"><img src="images/d3-sosodikon3.JPEG" alt="Sunset, Sosodikon" loading="lazy"></div>
+      <div class="sw ft"><img src="images/d3-sosodikon4.jpg" alt="Valley from Sosodikon" loading="lazy"></div>
+    </div>
+
+    <div class="pullquote">
+      <p class="fu">
+        The mountain wasn&rsquo;t visible yet &mdash;<br>
+        it hid behind <em>its own cloud.</em>
+      </p>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════
+     INTERLUDE — EVE OF THE CLIMB
+     Animations: slide-left, fade-zoom, slide-right,
+     wipe-bottom, wipe-top
+══════════════════════════════════════════ -->
+  <div class="marquee-strip" aria-hidden="true">
+    <div class="marquee-track">
+      <span class="marquee-item">KOTA KINABALU&ensp;&bull;&ensp;KUNDASANG&ensp;&bull;&ensp;MOUNT
+        KINABALU&ensp;&bull;&ensp;VIA FERRATA&ensp;&bull;&ensp;SUMMIT</span>
+      <span class="marquee-item">KOTA KINABALU&ensp;&bull;&ensp;KUNDASANG&ensp;&bull;&ensp;MOUNT
+        KINABALU&ensp;&bull;&ensp;VIA FERRATA&ensp;&bull;&ensp;SUMMIT</span>
+      <span class="marquee-item">KOTA KINABALU&ensp;&bull;&ensp;KUNDASANG&ensp;&bull;&ensp;MOUNT
+        KINABALU&ensp;&bull;&ensp;VIA FERRATA&ensp;&bull;&ensp;SUMMIT</span>
+      <span class="marquee-item">KOTA KINABALU&ensp;&bull;&ensp;KUNDASANG&ensp;&bull;&ensp;MOUNT
+        KINABALU&ensp;&bull;&ensp;VIA FERRATA&ensp;&bull;&ensp;SUMMIT</span>
+    </div>
+  </div>
+  <section id="before-climb">
+    <div class="interlude-intro">
+      <p class="ch-label fu">Day Four &middot; Eve of the Climb</p>
+      <p class="ch-body fu" style="margin-top:1.2rem;">
+        We registered at the park office and paid our fees in a hall where the walls were covered in summit permits
+        going back decades. That evening the mountain appeared briefly at dusk — the whole silhouette visible for one
+        clear moment before the cloud closed back in. We ate breakfast food for dinner and were in bed by eight.
+      </p>
+    </div>
+
+    <!-- Breakfast trio: slide-left / fade-zoom / slide-right -->
+    <div class="trio">
+      <div class="sw fl"><img src="images/d4-breakfast.jpg" alt="Breakfast before the climb" loading="lazy"></div>
+      <div class="sw zn"><img src="images/d4-kundasang.jpg" alt="Kundasang morning" loading="lazy"></div>
+      <div class="sw fr"><img src="images/d4-kundasang2.jpg" alt="Kundasang, day before summit" loading="lazy"></div>
+    </div>
+
+    <div class="gap-sm"></div>
+
+    <!-- Tea full-bleed (parallax only) -->
+    <div class="bleed bleed-lg">
+      <img src="images/d4-tea.JPG" alt="Tea plantation, Sabah highlands" loading="lazy" class="par-img">
+    </div>
+
+    <div class="gap-sm"></div>
+
+    <!-- Tea pair: wipe-from-bottom / wipe-from-top -->
+    <div class="pair asym-flip">
+      <div class="sw cb"><img src="images/d4-tea2.jpg" alt="Tea fields" loading="lazy"></div>
+      <div class="sw ct"><img src="images/d4-tea3.jpg" alt="Tea picking" loading="lazy"></div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════
+     03 — THE SUMMIT
+     Animations: fade-zoom, wipe-right/left, spin
+══════════════════════════════════════════ -->
+  <div class="marquee-strip" aria-hidden="true">
+    <div class="marquee-track">
+      <span class="marquee-item">KOTA KINABALU&ensp;&bull;&ensp;KUNDASANG&ensp;&bull;&ensp;MOUNT
+        KINABALU&ensp;&bull;&ensp;VIA FERRATA&ensp;&bull;&ensp;SUMMIT</span>
+      <span class="marquee-item">KOTA KINABALU&ensp;&bull;&ensp;KUNDASANG&ensp;&bull;&ensp;MOUNT
+        KINABALU&ensp;&bull;&ensp;VIA FERRATA&ensp;&bull;&ensp;SUMMIT</span>
+      <span class="marquee-item">KOTA KINABALU&ensp;&bull;&ensp;KUNDASANG&ensp;&bull;&ensp;MOUNT
+        KINABALU&ensp;&bull;&ensp;VIA FERRATA&ensp;&bull;&ensp;SUMMIT</span>
+      <span class="marquee-item">KOTA KINABALU&ensp;&bull;&ensp;KUNDASANG&ensp;&bull;&ensp;MOUNT
+        KINABALU&ensp;&bull;&ensp;VIA FERRATA&ensp;&bull;&ensp;SUMMIT</span>
+    </div>
+  </div>
+  <section id="summit">
+
+    <div class="par-section">
+      <div class="par-bg" id="par-summit" style="background-image:url('images/d5-kk2.JPG');"></div>
+      <div class="par-veil"></div>
+      <div class="par-content">
+        <p class="par-num fu">03</p>
+        <p class="ch-label fu" style="margin-bottom:.8rem;">4,095m &middot; Low&rsquo;s Peak</p>
+        <h2 class="par-heading">The Summit</h2>
+      </div>
+    </div>
+
+    <div class="chapter-intro">
+      <p class="ch-body fu" style="max-width:62ch;">
+        The alarm rang at 2&nbsp;AM. In the headlamp dark the trail became the whole world: the next wooden step, the
+        next fixed rope, the next breath of thinning air. At 3,500 metres my lungs began filing formal complaints. The
+        cold was the sort that doesn&rsquo;t feel cold at first — just precise, as if calibrated. By the final push
+        across the granite moonscape to Low&rsquo;s Peak, every step was a negotiation. And then, just as dawn split
+        open over the South China Sea, there was nowhere left to climb.
+      </p>
+    </div>
+
+    <!-- Dawn: full-bleed parallax -->
+    <div class="bleed bleed-xl">
+      <img src="images/d5-kk3.JPG" alt="Dawn breaking at the Kinabalu summit" loading="lazy" class="par-img">
+    </div>
+
+    <div class="gap-sm"></div>
+
+    <!-- Summit split: text + fade-zoom -->
+    <div class="split img-right">
+      <div class="split-text">
+        <p class="ch-label fu">Low&rsquo;s Peak</p>
+        <p class="body fu">
+          The highest point between the Himalayas and New Guinea. I sat on cold granite and didn&rsquo;t say anything
+          for a long time. The cloud layer below looked like a second ocean, impossibly still. We had earned every
+          centimetre of that view with every blister.
+        </p>
+      </div>
+      <div class="sw zn"><img src="images/d5-kk4.JPG" alt="View from Low's Peak" loading="lazy"></div>
+    </div>
+
+    <div class="gap-sm"></div>
+
+    <!-- Second summit split: wipe-from-left + text -->
+    <div class="split img-left">
+      <div class="sw cl"><img src="images/d5-kk5.JPG" alt="Granite plateau, Kinabalu" loading="lazy"></div>
+      <div class="split-text">
+        <p class="ch-label fu">Above the clouds</p>
+        <p class="body fu">
+          The summit plateau is raw granite — no soil, no vegetation, just polished rock in the half-light. Before the
+          sun rises it looks like another planet. After it rises, it looks like a painting of another planet. Either
+          way, you feel very small and very awake.
+        </p>
+      </div>
+    </div>
+
+    <div class="gap-sm"></div>
+
+    <!-- Summit trio: spin / fade / spin — the dramatic payoff -->
+    <div class="trio">
+      <div class="sw sp"><img src="images/d5-kk6.JPG" alt="Summit ridge, Kinabalu" loading="lazy"></div>
+      <div class="sw fd"><img src="images/d5-kk7.JPEG" alt="Descent from Low's Peak" loading="lazy"></div>
+      <div class="sw sp"><img src="images/d5-kk8.jpg" alt="Kinabalu summit at dawn" loading="lazy"></div>
+    </div>
+
+    <div class="pullquote">
+      <p class="fu">
+        There was nowhere left to climb &mdash;<br>
+        <em>4,095 metres of nowhere.</em>
+      </p>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════
+     04 — VIA FERRATA
+     Animations: slide-left/right/top/bottom,
+     skew, fade-zoom, wipe-left/right, wipe-bottom
+══════════════════════════════════════════ -->
+  <div class="marquee-strip" aria-hidden="true">
+    <div class="marquee-track">
+      <span class="marquee-item">KOTA KINABALU&ensp;&bull;&ensp;KUNDASANG&ensp;&bull;&ensp;MOUNT
+        KINABALU&ensp;&bull;&ensp;VIA FERRATA&ensp;&bull;&ensp;SUMMIT</span>
+      <span class="marquee-item">KOTA KINABALU&ensp;&bull;&ensp;KUNDASANG&ensp;&bull;&ensp;MOUNT
+        KINABALU&ensp;&bull;&ensp;VIA FERRATA&ensp;&bull;&ensp;SUMMIT</span>
+      <span class="marquee-item">KOTA KINABALU&ensp;&bull;&ensp;KUNDASANG&ensp;&bull;&ensp;MOUNT
+        KINABALU&ensp;&bull;&ensp;VIA FERRATA&ensp;&bull;&ensp;SUMMIT</span>
+      <span class="marquee-item">KOTA KINABALU&ensp;&bull;&ensp;KUNDASANG&ensp;&bull;&ensp;MOUNT
+        KINABALU&ensp;&bull;&ensp;VIA FERRATA&ensp;&bull;&ensp;SUMMIT</span>
+    </div>
+  </div>
+  <section id="via-ferrata">
+
+    <div class="par-section">
+      <div class="par-bg" id="par-via" style="background-image:url('images/d6-via.jpg');"></div>
+      <div class="par-veil" style="background:rgba(13,13,13,.58)"></div>
+      <div class="par-content">
+        <p class="par-num fu">04</p>
+        <p class="ch-label fu" style="margin-bottom:.8rem;">Via Ferrata</p>
+        <h2 class="par-heading">The Wall</h2>
+      </div>
+    </div>
+
+    <div class="chapter-intro">
+      <p class="ch-body fu" style="max-width:62ch;">
+        Six hours after reaching the summit, I was back on the mountain — this time clipped to a steel cable bolted into
+        the granite face. The Via Ferrata descends the sheer east wall of the summit plateau, and it turns out <em
+          style="color:var(--text);font-style:italic;">via ferrata</em> is Italian for &ldquo;suspended above a cloud
+        with shaking legs.&rdquo; Our guide moved with the easy confidence of someone who has done this four hundred
+        times. I moved with the concentrated focus of someone doing it exactly once.
+      </p>
+    </div>
+
+    <!-- Return to KK: slide-left / fade / slide-right -->
+    <div class="trio">
+      <div class="sw fl"><img src="images/d6-kk2.jpg" alt="Back in Kota Kinabalu" loading="lazy"></div>
+      <div class="sw fd"><img src="images/d6-kk3.jpg" alt="Kota Kinabalu" loading="lazy"></div>
+      <div class="sw fr"><img src="images/d6-kk4.jpg" alt="KK streets" loading="lazy"></div>
+    </div>
+
+    <div class="gap-sm"></div>
+
+    <!-- Via full-bleed (parallax only) -->
+    <div class="bleed bleed-lg">
+      <img src="images/d6-via3.jpg" alt="Via Ferrata, Kinabalu east wall" loading="lazy" class="par-img">
+    </div>
+
+    <div class="gap-sm"></div>
+
+    <!-- Via pair tall: slide-top / slide-bottom — the vertical theme -->
+    <div class="pair tall">
+      <div class="sw ft"><img src="images/d6-via4.jpg" alt="Clipped into Via Ferrata" loading="lazy"></div>
+      <div class="sw fb"><img src="images/d6-via5.jpg" alt="Via Ferrata descent" loading="lazy"></div>
+    </div>
+
+    <div class="gap-sm"></div>
+
+    <!-- Via pair: skew / slide-right -->
+    <div class="pair tall">
+      <div class="sw sk"><img src="images/d6-via6.jpg" alt="East wall, Kinabalu" loading="lazy"></div>
+      <div class="sw fr"><img src="images/d6-via7.jpg" alt="Cable route via ferrata" loading="lazy"></div>
+    </div>
+
+    <div class="gap-sm"></div>
+
+    <!-- Via split: fade-zoom (key moment) -->
+    <div class="split img-left">
+      <div class="sw zn"><img src="images/d6-via8.jpg" alt="Hanging on the wall" loading="lazy"></div>
+      <div class="split-text">
+        <p class="ch-label fu">The descent</p>
+        <p class="body fu">
+          The valley appeared below through gaps in the mist, impossibly far down. You clip your carabiner to the next
+          bolt, find the next foothold, breathe. One section at a time. The mountain lets you down slowly, as if
+          reluctant to be done with you.
+        </p>
+      </div>
+    </div>
+
+    <div class="gap-sm"></div>
+
+    <!-- Via pair: wipe-left / wipe-right -->
+    <div class="pair asym">
+      <div class="sw cl"><img src="images/d6-via9.jpg" alt="Via Ferrata, looking down" loading="lazy"></div>
+      <div class="sw cr"><img src="images/d6-via10.jpg" alt="Cable route close-up" loading="lazy"></div>
+    </div>
+
+    <div class="gap-sm"></div>
+
+    <!-- Final full-bleed (parallax only) -->
+    <div class="bleed bleed-xl">
+      <img src="images/d6-via11.jpg" alt="Looking out from the east wall" loading="lazy" class="par-img"
+        style="object-position: center 58%;">
+    </div>
+
+    <div class="gap-sm"></div>
+
+    <!-- Very last shot: wipe from bottom upward — like climbing -->
+    <div class="sw bleed-md cb">
+      <img src="images/d6-via12.jpg" alt="Final descent, Via Ferrata" loading="lazy"
+        style="object-position: center 35%;">
+    </div>
+
+    <div class="pullquote" id="final-quote">
+      <p class="fu">
+        The valley below,<br>
+        impossibly far &mdash; <em>impossibly beautiful.</em>
+      </p>
+    </div>
+  </section>
+
+
+  <!-- ── Footer ── -->
+  <footer>
+    <div class="footer-row">
+      <p class="footer-wm" aria-hidden="true">Kinabalu</p>
+      <div class="footer-meta">
+        <span class="hi">Sabah, Malaysia</span>
+        <span>Mount Kinabalu &amp; Kundasang</span>
+        <span>June 2025</span>
+        <span class="name">Yiping</span>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- ── GSAP ── -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    /* ── Progress bar ── */
+    ScrollTrigger.create({
+      trigger: document.body,
+      start: 'top top',
+      end: 'bottom bottom',
+      onUpdate: s => document.getElementById('bar').style.width = (s.progress * 100) + '%'
+    });
+
+    /* ── Hero entrance (title handled separately by scramble below) ── */
+    gsap.timeline({ defaults: { ease: 'power3.out' } })
+      .from('#hero-eye', { opacity: 0, y: 16, duration: 1, delay: 0.4 })
+      .from('#hero-sub', { opacity: 0, y: 22, duration: 1 }, '>+1.8')
+      .from('#scroll-cue', { opacity: 0, duration: 0.8 }, '-=0.5');
+
+    /* ── Hero title scramble / decode effect ──────────────────────────
+       Each character position rapidly cycles A–Z, then locks into the
+       correct letter left-to-right until KINABALU is fully revealed.
+       The initial textContent is replaced immediately so the real word
+       is never visible before the effect runs.
+    ───────────────────────────────────────────────────────────────────── */
+    (function scrambleHero() {
+      const el = document.getElementById('hero-title');
+      const FINAL = 'KINABALU';
+      const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      const DURATION = 3400; /* ms — total time from first tick to last lock */
+      const DELAY = 350;  /* ms — pause before scramble starts */
+      const TICK = 42;   /* ms — frame interval (~24 fps of chaos) */
+
+      /* Show scrambled gibberish immediately so FINAL is never shown early */
+      const rand = () => CHARS[Math.floor(Math.random() * 26)];
+      el.textContent = Array.from({ length: FINAL.length }, rand).join('');
+
+      setTimeout(() => {
+        const t0 = performance.now();
+        const timer = setInterval(() => {
+          const elapsed = performance.now() - t0;
+          let out = '';
+          let done = true;
+
+          for (let i = 0; i < FINAL.length; i++) {
+            /* Letter i locks in when elapsed passes its threshold */
+            if (elapsed >= (i + 1) / FINAL.length * DURATION) {
+              out += FINAL[i];
+            } else {
+              out += rand();
+              done = false;
+            }
+          }
+
+          el.textContent = out;
+          if (done) { clearInterval(timer); el.textContent = FINAL; }
+        }, TICK);
+      }, DELAY);
+    })();
+
+    /* ── Scroll-cue pulse ── */
+    gsap.to('#scroll-line', {
+      scaleY: 0.2, transformOrigin: 'top center',
+      repeat: -1, yoyo: true, duration: 1.1, ease: 'sine.inOut'
+    });
+
+    /* ── Hero parallax ── */
+    gsap.to('#hero-bg', {
+      yPercent: 28, ease: 'none',
+      scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true }
+    });
+
+    /* ── Parallax section backgrounds ── */
+    ['#par-summit', '#par-via'].forEach(id => {
+      gsap.fromTo(id,
+        { yPercent: -12 },
+        {
+          yPercent: 12, ease: 'none',
+          scrollTrigger: { trigger: id, start: 'top bottom', end: 'bottom top', scrub: true }
+        }
+      );
+    });
+
+    /* ── Full-bleed image parallax ── */
+    gsap.utils.toArray('.par-img').forEach(img => {
+      gsap.fromTo(img,
+        { yPercent: -10 },
+        {
+          yPercent: 10, ease: 'none',
+          scrollTrigger: {
+            trigger: img.closest('.bleed'),
+            start: 'top bottom', end: 'bottom top', scrub: true
+          }
+        }
+      );
+    });
+
+    /* ════════════════════════════════════════════
+       ENTRANCE ANIMATION SYSTEM
+       ─────────────────────────────────────────
+       Each .sw element carries a class that
+       controls HOW its image enters the screen.
+       GSAP sets the initial (hidden) state
+       synchronously, then ScrollTrigger plays
+       the tween on enter and REVERSES it on
+       leave-back, so the effect re-fires on
+       every scroll cycle.
+    ════════════════════════════════════════════ */
+
+    const CLIP_END = 'inset(0% 0% 0% 0%)';
+
+    /* Maps class → { init vars on img/wrap, to vars, target ('img'|'wrap') } */
+    const FX = {
+      /* ── Translate slides (modest scale — easier on the GPU) ── */
+      fl: { t: 'img', i: { xPercent: -110, scale: 1.04 }, o: { xPercent: 0, scale: 1, duration: 1.1, ease: 'expo.out' } },
+      fr: { t: 'img', i: { xPercent: 110, scale: 1.04 }, o: { xPercent: 0, scale: 1, duration: 1.1, ease: 'expo.out' } },
+      ft: { t: 'img', i: { yPercent: -110, scale: 1.03 }, o: { yPercent: 0, scale: 1, duration: 1.0, ease: 'expo.out' } },
+      fb: { t: 'img', i: { yPercent: 110, scale: 1.03 }, o: { yPercent: 0, scale: 1, duration: 1.0, ease: 'expo.out' } },
+      /* ── Fade & zoom ── */
+      fd: { t: 'img', i: { opacity: 0, scale: 0.92 }, o: { opacity: 1, scale: 1, duration: 1.0, ease: 'power2.out' } },
+      zn: { t: 'img', i: { opacity: 0, scale: 1.18 }, o: { opacity: 1, scale: 1, duration: 1.2, ease: 'power3.out' } },
+      /* ── Diagonal slide — enters from right with a slight downward drift;
+            no skewX so the GPU only composites one property at a time ── */
+      sk: { t: 'img', i: { xPercent: 110, yPercent: 8, opacity: 0 }, o: { xPercent: 0, yPercent: 0, opacity: 1, duration: 1.1, ease: 'expo.out' } },
+      /* ── Spin-settle — starts gently tilted & slightly zoomed ── */
+      sp: { t: 'img', i: { rotation: 7, scale: 1.12, opacity: 0 }, o: { rotation: 0, scale: 1, opacity: 1, duration: 1.1, ease: 'back.out(1.4)' } },
+      /* ── Clip-path wipes (animate the .sw wrapper, not the image) ── */
+      cl: { t: 'wrap', i: { clipPath: 'inset(0% 100% 0% 0%)' }, o: { clipPath: CLIP_END, duration: 1.0, ease: 'expo.inOut' } },
+      cr: { t: 'wrap', i: { clipPath: 'inset(0% 0% 0% 100%)' }, o: { clipPath: CLIP_END, duration: 1.0, ease: 'expo.inOut' } },
+      ct: { t: 'wrap', i: { clipPath: 'inset(0% 0% 100% 0%)' }, o: { clipPath: CLIP_END, duration: 1.0, ease: 'expo.inOut' } },
+      cb: { t: 'wrap', i: { clipPath: 'inset(100% 0% 0% 0%)' }, o: { clipPath: CLIP_END, duration: 1.0, ease: 'expo.inOut' } },
+    };
+
+    /* Detect which effect class an .sw element has */
+    function getEffect(wrap) {
+      for (const key of Object.keys(FX)) {
+        if (wrap.classList.contains(key)) return { key, ...FX[key] };
+      }
+      return null;
+    }
+
+    /* Resolve the GSAP target element and the "to" vars for an .sw */
+    function resolve(wrap) {
+      const eff = getEffect(wrap);
+      if (!eff) return null;
+      const target = eff.t === 'wrap' ? wrap : wrap.querySelector('img');
+      return { target, toVars: eff.o };
+    }
+
+    /* Set ALL initial states synchronously before first paint */
+    gsap.utils.toArray('.sw').forEach(wrap => {
+      const eff = getEffect(wrap);
+      if (!eff) return;
+      const el = eff.t === 'wrap' ? wrap : wrap.querySelector('img');
+      gsap.set(el, eff.i);
+    });
+
+    /* ─────────────────────────────────────────────────────────────
+       Core problem this solves:
+       loading="lazy" images are often not yet decoded when the
+       ScrollTrigger fires — the animation plays against a blank
+       container and the user never sees it.
+  
+       whenReady() calls `play` immediately if all images in `root`
+       are already loaded, otherwise waits for every load/error
+       event.  The `gate` object lets the caller cancel a pending
+       play if the trigger is left before images finish.
+    ───────────────────────────────────────────────────────────── */
+    function whenReady(root, gate, play) {
+      const imgs = [...root.querySelectorAll('img')];
+      const waiting = imgs.filter(i => !i.complete || i.naturalWidth === 0);
+      if (!waiting.length) { play(); return; }
+      let n = waiting.length;
+      waiting.forEach(img => {
+        const done = () => { if (!--n && gate.on) play(); };
+        img.addEventListener('load', done, { once: true });
+        img.addEventListener('error', done, { once: true }); /* still animate on 404 */
+      });
+    }
+
+    /* ── Standalone .sw elements (not inside .pair or .trio) ── */
+    gsap.utils.toArray('.sw').forEach(wrap => {
+      if (wrap.closest('.pair, .trio')) return;
+      const r = resolve(wrap);
+      if (!r) return;
+
+      const tween = gsap.to(r.target, { ...r.toVars, paused: true });
+      const gate = { on: false };
+
+      ScrollTrigger.create({
+        trigger: wrap,
+        start: 'top 55%',
+        onEnter: () => { gate.on = true; whenReady(wrap, gate, () => tween.play()); },
+        onLeaveBack: () => { gate.on = false; tween.reverse(); }
+      });
+    });
+
+    /* ── Grid .sw elements (.pair / .trio) — staggered timeline ── */
+    gsap.utils.toArray('.pair, .trio').forEach(grid => {
+      const wraps = [...grid.querySelectorAll('.sw')];
+      const tl = gsap.timeline({ paused: true });
+      const gate = { on: false };
+
+      wraps.forEach((wrap, i) => {
+        const r = resolve(wrap);
+        if (!r) return;
+        tl.to(r.target, { ...r.toVars }, i * 0.14);
+      });
+
+      ScrollTrigger.create({
+        trigger: grid,
+        start: 'top 50%',
+        onEnter: () => { gate.on = true; whenReady(grid, gate, () => tl.play()); },
+        onLeaveBack: () => { gate.on = false; tl.reverse(); }
+      });
+    });
+
+    /* ── Text fade-up (also reverses on scroll-back) ── */
+    gsap.utils.toArray('.fu').forEach(el => {
+      gsap.fromTo(el,
+        { opacity: 0, y: 44 },
+        {
+          opacity: 1, y: 0, duration: 1, ease: 'power3.out',
+          scrollTrigger: {
+            trigger: el,
+            /* Text enters earlier than images so reading flow feels natural */
+            start: 'top 80%',
+            toggleActions: 'play none none reverse'
+          }
+        }
+      );
+    });
+
+    /* ── Section heading letter-split + stagger reveal ──────────────────
+       Each .ch-heading and .par-heading has its text wrapped letter-by-
+       letter into .heading-letter spans at runtime so GSAP can stagger
+       them individually.  The default CSS state is outlined/translucent;
+       the hover state fills them solid via CSS transition.
+    ───────────────────────────────────────────────────────────────────── */
+    document.querySelectorAll('.ch-heading, .par-heading').forEach(heading => {
+      /* Split childNodes so <br> elements survive intact */
+      const nodes = [...heading.childNodes];
+      heading.innerHTML = '';
+      nodes.forEach(node => {
+        if (node.nodeType === 3 /* TEXT_NODE */) {
+          [...node.textContent].forEach(char => {
+            const span = document.createElement('span');
+            span.className = 'heading-letter';
+            span.textContent = char === ' ' ? ' ' : char;
+            heading.appendChild(span);
+          });
+        } else if (node.nodeName === 'BR') {
+          heading.appendChild(document.createElement('br'));
+        }
+      });
+
+      const letters = heading.querySelectorAll('.heading-letter');
+
+      /* Set invisible before first paint */
+      gsap.set(letters, { opacity: 0, y: 52 });
+
+      /* Stagger reveal on enter, collapse on scroll-back */
+      ScrollTrigger.create({
+        trigger: heading,
+        start: 'top 82%',
+        onEnter: () => gsap.to(letters, {
+          opacity: 1, y: 0,
+          duration: 0.55, stagger: 0.04, ease: 'power3.out',
+          overwrite: 'auto'
+        }),
+        onLeaveBack: () => gsap.to(letters, {
+          opacity: 0, y: 52,
+          duration: 0.25, stagger: 0.02, ease: 'power2.in',
+          overwrite: 'auto'
+        })
+      });
+    });
+
+    /* ── Final quote: letter morph + cursor-drift tilt ──────────────────
+       Walks the <p> childNodes recursively so text nodes, <br>, and <em>
+       (colour wrapper) all survive intact.  Each non-space character
+       becomes a .morph-letter span with per-letter --dur / --del custom
+       properties that offset the CSS keyframe phase, creating a staggered
+       ripple across the whole quote.
+    ───────────────────────────────────────────────────────────────────── */
+    (function initFinalQuote() {
+      const quote = document.getElementById('final-quote');
+      if (!quote) return;
+
+      /* ── Letter split ── */
+      let idx = 0;
+
+      /* Flush accumulated characters as a no-break word span so letters
+         within a word can never be split across lines by the browser. */
+      function flushWord(chars, parent) {
+        if (!chars.length) return;
+        const word = document.createElement('span');
+        word.style.cssText = 'display:inline-block; white-space:nowrap';
+        chars.forEach(ch => {
+          const s = document.createElement('span');
+          s.className = 'morph-letter';
+          s.textContent = ch;
+          s.style.setProperty('--dur', `${2.5 + (idx % 11) * 0.11}s`);
+          s.style.setProperty('--del', `${-((idx * 0.13) % 3.5).toFixed(2)}s`);
+          word.appendChild(s);
+          idx++;
+        });
+        parent.appendChild(word);
+      }
+
+      function processNode(node, parent) {
+        if (node.nodeType === 3) { /* text */
+          let buf = [];
+          [...node.textContent].forEach(ch => {
+            if (ch === '\n' || ch === '\r') return;
+            if (ch === ' ') {
+              flushWord(buf, parent);
+              buf = [];
+              parent.appendChild(document.createTextNode(' '));
+            } else {
+              buf.push(ch);
+            }
+          });
+          flushWord(buf, parent); /* flush any trailing word */
+        } else if (node.nodeName === 'BR') {
+          parent.appendChild(document.createElement('br'));
+        } else if (node.nodeType === 1) { /* element (em, etc.) */
+          const el = document.createElement(node.tagName.toLowerCase());
+          [...node.attributes].forEach(a => el.setAttribute(a.name, a.value));
+          [...node.childNodes].forEach(c => processNode(c, el));
+          parent.appendChild(el);
+        }
+      }
+      const p = quote.querySelector('p');
+      const snapshot = [...p.childNodes];
+      p.innerHTML = '';
+      snapshot.forEach(n => processNode(n, p));
+
+      /* ── Cursor drift tilt ── */
+      const MAX_TILT = 5;  /* degrees  */
+      const MAX_TX = 12; /* px drift */
+      const MAX_TY = 7;
+      document.addEventListener('mousemove', e => {
+        const nx = (e.clientX / window.innerWidth) * 2 - 1; /* −1 … 1 */
+        const ny = (e.clientY / window.innerHeight) * 2 - 1;
+        quote.style.transform =
+          `perspective(700px) ` +
+          `rotateX(${(-ny * MAX_TILT).toFixed(2)}deg) ` +
+          `rotateY(${(nx * MAX_TILT).toFixed(2)}deg) ` +
+          `translateX(${(nx * MAX_TX).toFixed(1)}px) ` +
+          `translateY(${(ny * MAX_TY).toFixed(1)}px)`;
+      });
+    })();
+
+    /* Recalculate all trigger positions after fonts + lazy images have
+       settled — prevents the via-ferrata (and other late) sections from
+       firing at stale scroll offsets */
+    window.addEventListener('load', () => ScrollTrigger.refresh());
+  </script>
+</body>
+
+</html>
