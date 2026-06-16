@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Inter:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Inter:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Playfair+Display:wght@700&display=swap"
     rel="stylesheet">
   <style>
     /* ─── Reset ─── */
@@ -19,6 +19,18 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+    }
+
+    /* ─── Custom text selection ─── */
+    ::selection        { background: #5C2512; color: #F5F0EB; }
+    ::-moz-selection   { background: #5C2512; color: #F5F0EB; }
+
+    /* ─── Images: no selection highlight, no drag ghost ─── */
+    img {
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-user-drag: none;
+      user-drag: none;
     }
 
     :root {
@@ -56,6 +68,7 @@
       height: 100%;
       z-index: -2;
       display: block;
+      pointer-events: none;
     }
 
     #bg-overlay {
@@ -107,12 +120,27 @@
     }
 
     .nav-logo {
-      font-family: 'Big Shoulders Display', sans-serif;
-      font-size: 1.15rem;
-      font-weight: 700;
-      letter-spacing: .1em;
+      display: flex;
+      flex-direction: column;
+      line-height: 1;
+      gap: 0.18rem;
       color: #fff;
       text-decoration: none;
+    }
+
+    .nav-logo-top {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: 0.65em;
+      text-transform: uppercase;
+    }
+
+    .nav-logo-bottom {
+      font-family: 'Big Shoulders Display', sans-serif;
+      font-size: 1.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
     }
 
     .nav-links {
@@ -771,7 +799,10 @@
 
   <!-- ── Nav ── -->
   <nav>
-    <a href="#hero" class="nav-logo">Kinabalu</a>
+    <a href="#hero" class="nav-logo">
+      <span class="nav-logo-top">Kota</span>
+      <span class="nav-logo-bottom">Kinabalu</span>
+    </a>
     <ul class="nav-links">
       <li><a href="#arrival">01 Islands</a></li>
       <li><a href="#kundasang">02 Kundasang</a></li>
@@ -818,17 +849,17 @@
 
     <!-- Jesselton + Kundasang: wipe-left / wipe-right -->
     <div class="pair">
-      <div class="sw cl"><img src="images/webp/d2-jesselton.webp" alt="Jesselton Point, Kota Kinabalu" loading="lazy" width="1920" height="2560"></div>
-      <div class="sw cr"><img src="images/webp/d2-kundasang.webp" alt="View toward Kundasang" loading="lazy" width="1920" height="2560"></div>
+      <div class="sw cl"><img src="images/webp/d2-jesselton.webp" alt="Jesselton Point, Kota Kinabalu" loading="lazy" draggable="false" width="1920" height="2560"></div>
+      <div class="sw cr"><img src="images/webp/d2-kundasang.webp" alt="View toward Kundasang" loading="lazy" draggable="false" width="1920" height="2560"></div>
     </div>
 
     <div class="gap-sm"></div>
 
     <!-- Snorkelling trio: slide-top / fade-zoom / slide-bottom -->
     <div class="trio">
-      <div class="sw ft"><img src="images/webp/d2-snorkelling.webp" alt="Snorkelling, Sapi Island" loading="lazy" width="1920" height="2560"></div>
-      <div class="sw zn"><img src="images/webp/d2-snorkelling3.webp" alt="Underwater, Sapi Island" loading="lazy" width="1920" height="2560"></div>
-      <div class="sw fb"><img src="images/webp/d2-snorkelling4.webp" alt="Sea life, Sapi Island" loading="lazy" width="1920" height="2560"></div>
+      <div class="sw ft"><img src="images/webp/d2-snorkelling.webp" alt="Snorkelling, Sapi Island" loading="lazy" draggable="false" width="1920" height="2560"></div>
+      <div class="sw zn"><img src="images/webp/d2-snorkelling3.webp" alt="Underwater, Sapi Island" loading="lazy" draggable="false" width="1920" height="2560"></div>
+      <div class="sw fb"><img src="images/webp/d2-snorkelling4.webp" alt="Sea life, Sapi Island" loading="lazy" draggable="false" width="1920" height="2560"></div>
     </div>
   </section>
 
@@ -850,14 +881,14 @@
 
     <!-- Full-bleed valley opener (parallax only) -->
     <div class="bleed bleed-xl">
-      <img src="images/webp/d3-kundasang.webp" alt="Kundasang valley" loading="lazy" class="par-img" width="3000" height="2000">
+      <img src="images/webp/d3-kundasang.webp" alt="Kundasang valley" loading="lazy" draggable="false" class="par-img" width="3000" height="2000">
     </div>
 
     <div class="gap-sm"></div>
 
     <!-- Kundasang detail: slide from left into split -->
     <div class="split img-left">
-      <div class="sw fl"><img src="images/webp/d3-kundasang2.webp" alt="Kundasang village" loading="lazy" width="2560" height="1920"></div>
+      <div class="sw fl"><img src="images/webp/d3-kundasang2.webp" alt="Kundasang village" loading="lazy" draggable="false" width="2560" height="1920"></div>
       <div class="split-text">
         <p class="ch-label fu">Desa Dairy Farm</p>
         <p class="body fu">
@@ -870,17 +901,17 @@
 
     <!-- Farm pair: slide-right / slide-left -->
     <div class="pair">
-      <div class="sw fr"><img src="images/webp/d3-farm.webp" alt="Strawberry farm, Kundasang" loading="lazy" width="1707" height="2560"></div>
-      <div class="sw fl"><img src="images/webp/d3-farm2.webp" alt="Vegetable terraces" loading="lazy" width="2560" height="1707"></div>
+      <div class="sw fr"><img src="images/webp/d3-farm.webp" alt="Strawberry farm, Kundasang" loading="lazy" draggable="false" width="1707" height="2560"></div>
+      <div class="sw fl"><img src="images/webp/d3-farm2.webp" alt="Vegetable terraces" loading="lazy" draggable="false" width="2560" height="1707"></div>
     </div>
 
     <div class="gap-sm"></div>
 
     <!-- Farm trio: wipe-left / fade-zoom / wipe-right -->
     <div class="trio">
-      <div class="sw cl"><img src="images/webp/d3-farm3.webp" alt="Farm, Kundasang" loading="lazy" width="1707" height="2560"></div>
-      <div class="sw zn"><img src="images/webp/d3-farm4.webp" alt="Strawberry fields" loading="lazy" width="1707" height="2560"></div>
-      <div class="sw cr"><img src="images/webp/d3-farm5.webp" alt="Harvest, Kundasang" loading="lazy" width="2560" height="1920"></div>
+      <div class="sw cl"><img src="images/webp/d3-farm3.webp" alt="Farm, Kundasang" loading="lazy" draggable="false" width="1707" height="2560"></div>
+      <div class="sw zn"><img src="images/webp/d3-farm4.webp" alt="Strawberry fields" loading="lazy" draggable="false" width="1707" height="2560"></div>
+      <div class="sw cr"><img src="images/webp/d3-farm5.webp" alt="Harvest, Kundasang" loading="lazy" draggable="false" width="2560" height="1920"></div>
     </div>
 
     <div class="gap-sm"></div>
@@ -893,31 +924,31 @@
           The afternoon picked up pace. ATVs through red mud at Borneo Adventure Sport, then the scramble up Sosodikon Hill for the view across the valley. Anooh Coffee as the light went orange, the mountain somewhere just above the clouds.
         </p>
       </div>
-      <div class="sw sk"><img src="images/webp/d3-atv.webp" alt="ATV ride, Kundasang" loading="lazy" width="1536" height="2048"></div>
+      <div class="sw sk"><img src="images/webp/d3-atv.webp" alt="ATV ride, Kundasang" loading="lazy" draggable="false" width="1536" height="2048"></div>
     </div>
 
     <div class="gap-sm"></div>
 
     <!-- Anooh ranch pair: skew / slide-left -->
     <div class="pair asym">
-      <div class="sw fl"><img src="images/webp/d3-anooh.webp" alt="Anooh Ranch" loading="lazy" width="2560" height="1707"></div>
-      <div class="sw sk"><img src="images/webp/d3-anooh2.webp" alt="Cattle, Anooh Ranch" loading="lazy" width="2560" height="1920"></div>
+      <div class="sw fl"><img src="images/webp/d3-anooh.webp" alt="Anooh Ranch" loading="lazy" draggable="false" width="2560" height="1707"></div>
+      <div class="sw sk"><img src="images/webp/d3-anooh2.webp" alt="Cattle, Anooh Ranch" loading="lazy" draggable="false" width="2560" height="1920"></div>
     </div>
 
     <div class="gap-sm"></div>
 
     <!-- Sosodikon full-bleed (parallax only) -->
     <div class="bleed bleed-lg">
-      <img src="images/webp/d3-sosodikon.webp" alt="Sosodikon Hill at dusk" loading="lazy" class="par-img" width="3000" height="2000">
+      <img src="images/webp/d3-sosodikon.webp" alt="Sosodikon Hill at dusk" loading="lazy" draggable="false" class="par-img" width="3000" height="2000">
     </div>
 
     <div class="gap-sm"></div>
 
     <!-- Sosodikon trio: slide-top / slide-bottom / slide-top -->
     <div class="trio">
-      <div class="sw ft"><img src="images/webp/d3-sosodikon2.webp" alt="Sosodikon Hill views" loading="lazy" width="2560" height="1707"></div>
-      <div class="sw fb"><img src="images/webp/d3-sosodikon3.webp" alt="Sunset, Sosodikon" loading="lazy" width="1536" height="2048"></div>
-      <div class="sw ft"><img src="images/webp/d3-sosodikon4.webp" alt="Valley from Sosodikon" loading="lazy" width="1920" height="2560"></div>
+      <div class="sw ft"><img src="images/webp/d3-sosodikon2.webp" alt="Sosodikon Hill views" loading="lazy" draggable="false" width="2560" height="1707"></div>
+      <div class="sw fb"><img src="images/webp/d3-sosodikon3.webp" alt="Sunset, Sosodikon" loading="lazy" draggable="false" width="1536" height="2048"></div>
+      <div class="sw ft"><img src="images/webp/d3-sosodikon4.webp" alt="Valley from Sosodikon" loading="lazy" draggable="false" width="1920" height="2560"></div>
     </div>
 
     <div class="pullquote">
@@ -946,24 +977,24 @@
 
     <!-- Breakfast trio: slide-left / fade-zoom / slide-right -->
     <div class="trio">
-      <div class="sw fl"><img src="images/webp/d4-breakfast.webp" alt="Breakfast before the climb" loading="lazy" width="1920" height="2560"></div>
-      <div class="sw zn"><img src="images/webp/d4-kundasang.webp" alt="Kundasang morning" loading="lazy" width="1920" height="2560"></div>
-      <div class="sw fr"><img src="images/webp/d4-kundasang2.webp" alt="Kundasang, day before summit" loading="lazy" width="2560" height="1920"></div>
+      <div class="sw fl"><img src="images/webp/d4-breakfast.webp" alt="Breakfast before the climb" loading="lazy" draggable="false" width="1920" height="2560"></div>
+      <div class="sw zn"><img src="images/webp/d4-kundasang.webp" alt="Kundasang morning" loading="lazy" draggable="false" width="1920" height="2560"></div>
+      <div class="sw fr"><img src="images/webp/d4-kundasang2.webp" alt="Kundasang, day before summit" loading="lazy" draggable="false" width="2560" height="1920"></div>
     </div>
 
     <div class="gap-sm"></div>
 
     <!-- Tea full-bleed (parallax only) -->
     <div class="bleed bleed-lg">
-      <img src="images/webp/d4-tea.webp" alt="Tea plantation, Sabah highlands" loading="lazy" class="par-img" width="3000" height="2000">
+      <img src="images/webp/d4-tea.webp" alt="Tea plantation, Sabah highlands" loading="lazy" draggable="false" class="par-img" width="3000" height="2000">
     </div>
 
     <div class="gap-sm"></div>
 
     <!-- Tea pair: wipe-from-bottom / wipe-from-top -->
     <div class="pair asym-flip">
-      <div class="sw cb"><img src="images/webp/d4-tea2.webp" alt="Tea fields" loading="lazy" width="1920" height="2560"></div>
-      <div class="sw ct"><img src="images/webp/d4-tea3.webp" alt="Tea picking" loading="lazy" width="2560" height="1920"></div>
+      <div class="sw cb"><img src="images/webp/d4-tea2.webp" alt="Tea fields" loading="lazy" draggable="false" width="1920" height="2560"></div>
+      <div class="sw ct"><img src="images/webp/d4-tea3.webp" alt="Tea picking" loading="lazy" draggable="false" width="2560" height="1920"></div>
     </div>
   </section>
 
@@ -992,7 +1023,7 @@
 
     <!-- Dawn: full-bleed parallax -->
     <div class="bleed bleed-xl">
-      <img src="images/webp/d5-kk3.webp" alt="Dawn breaking at the Kinabalu summit" loading="lazy" class="par-img" width="2000" height="3000">
+      <img src="images/webp/d5-kk3.webp" alt="Dawn breaking at the Kinabalu summit" loading="lazy" draggable="false" class="par-img" width="2000" height="3000">
     </div>
 
     <div class="gap-sm"></div>
@@ -1005,14 +1036,14 @@
           Laban Rata is a different altitude entirely &mdash; air noticeably thinner, the canopy long gone. We took the via ferrata briefing at Pendant Hut, ate our meal early, and tried to sleep while the temperature dropped outside. 2am would come fast.
         </p>
       </div>
-      <div class="sw zn"><img src="images/webp/d5-kk4.webp" alt="View from Low's Peak" loading="lazy" width="1707" height="2560"></div>
+      <div class="sw zn"><img src="images/webp/d5-kk4.webp" alt="View from Low's Peak" loading="lazy" draggable="false" width="1707" height="2560"></div>
     </div>
 
     <div class="gap-sm"></div>
 
     <!-- Second summit split: wipe-from-left + text -->
     <div class="split img-left">
-      <div class="sw cl"><img src="images/webp/d5-kk5.webp" alt="Granite plateau, Kinabalu" loading="lazy" width="2560" height="1707"></div>
+      <div class="sw cl"><img src="images/webp/d5-kk5.webp" alt="Granite plateau, Kinabalu" loading="lazy" draggable="false" width="2560" height="1707"></div>
       <div class="split-text">
         <p class="ch-label fu">Above the cloud</p>
         <p class="body fu">
@@ -1025,9 +1056,9 @@
 
     <!-- Summit trio: spin / fade / spin — the dramatic payoff -->
     <div class="trio">
-      <div class="sw sp"><img src="images/webp/d5-kk6.webp" alt="Summit ridge, Kinabalu" loading="lazy" width="2560" height="1707"></div>
-      <div class="sw fd"><img src="images/webp/d5-kk7.webp" alt="Descent from Low's Peak" loading="lazy" width="1536" height="2048"></div>
-      <div class="sw sp"><img src="images/webp/d5-kk8.webp" alt="Kinabalu summit at dawn" loading="lazy" width="1920" height="2560"></div>
+      <div class="sw sp"><img src="images/webp/d5-kk6.webp" alt="Summit ridge, Kinabalu" loading="lazy" draggable="false" width="2560" height="1707"></div>
+      <div class="sw fd"><img src="images/webp/d5-kk7.webp" alt="Descent from Low's Peak" loading="lazy" draggable="false" width="1536" height="2048"></div>
+      <div class="sw sp"><img src="images/webp/d5-kk8.webp" alt="Kinabalu summit at dawn" loading="lazy" draggable="false" width="1920" height="2560"></div>
     </div>
 
     <div class="pullquote">
@@ -1064,39 +1095,39 @@
 
     <!-- Return to KK: slide-left / fade / slide-right -->
     <div class="trio">
-      <div class="sw fl"><img src="images/webp/d6-kk2.webp" alt="Back in Kota Kinabalu" loading="lazy" width="2560" height="1920"></div>
-      <div class="sw fd"><img src="images/webp/d6-kk3.webp" alt="Kota Kinabalu" loading="lazy" width="2560" height="1920"></div>
-      <div class="sw fr"><img src="images/webp/d6-kk4.webp" alt="KK streets" loading="lazy" width="2560" height="1920"></div>
+      <div class="sw fl"><img src="images/webp/d6-kk2.webp" alt="Back in Kota Kinabalu" loading="lazy" draggable="false" width="2560" height="1920"></div>
+      <div class="sw fd"><img src="images/webp/d6-kk3.webp" alt="Kota Kinabalu" loading="lazy" draggable="false" width="2560" height="1920"></div>
+      <div class="sw fr"><img src="images/webp/d6-kk4.webp" alt="KK streets" loading="lazy" draggable="false" width="2560" height="1920"></div>
     </div>
 
     <div class="gap-sm"></div>
 
     <!-- Via full-bleed (parallax only) -->
     <div class="bleed bleed-lg">
-      <img src="images/webp/d6-via3.webp" alt="Via Ferrata, Kinabalu east wall" loading="lazy" class="par-img" width="2250" height="3000">
+      <img src="images/webp/d6-via3.webp" alt="Via Ferrata, Kinabalu east wall" loading="lazy" draggable="false" class="par-img" width="2250" height="3000">
     </div>
 
     <div class="gap-sm"></div>
 
     <!-- Via pair tall: slide-top / slide-bottom — the vertical theme -->
     <div class="pair tall">
-      <div class="sw ft"><img src="images/webp/d6-via4.webp" alt="Clipped into Via Ferrata" loading="lazy" width="1920" height="2560"></div>
-      <div class="sw fb"><img src="images/webp/d6-via5.webp" alt="Via Ferrata descent" loading="lazy" width="1920" height="2560"></div>
+      <div class="sw ft"><img src="images/webp/d6-via4.webp" alt="Clipped into Via Ferrata" loading="lazy" draggable="false" width="1920" height="2560"></div>
+      <div class="sw fb"><img src="images/webp/d6-via5.webp" alt="Via Ferrata descent" loading="lazy" draggable="false" width="1920" height="2560"></div>
     </div>
 
     <div class="gap-sm"></div>
 
     <!-- Via pair: skew / slide-right -->
     <div class="pair tall">
-      <div class="sw sk"><img src="images/webp/d6-via6.webp" alt="East wall, Kinabalu" loading="lazy" width="1920" height="2560"></div>
-      <div class="sw fr"><img src="images/webp/d6-via7.webp" alt="Cable route via ferrata" loading="lazy" width="1920" height="2560"></div>
+      <div class="sw sk"><img src="images/webp/d6-via6.webp" alt="East wall, Kinabalu" loading="lazy" draggable="false" width="1920" height="2560"></div>
+      <div class="sw fr"><img src="images/webp/d6-via7.webp" alt="Cable route via ferrata" loading="lazy" draggable="false" width="1920" height="2560"></div>
     </div>
 
     <div class="gap-sm"></div>
 
     <!-- Via split: fade-zoom (key moment) -->
     <div class="split img-left">
-      <div class="sw zn"><img src="images/webp/d6-via8.webp" alt="Hanging on the wall" loading="lazy" width="1920" height="2560"></div>
+      <div class="sw zn"><img src="images/webp/d6-via8.webp" alt="Hanging on the wall" loading="lazy" draggable="false" width="1920" height="2560"></div>
       <div class="split-text">
         <p class="ch-label fu">Walk the Torq</p>
         <p class="body fu">
@@ -1109,15 +1140,15 @@
 
     <!-- Via pair: wipe-left / wipe-right -->
     <div class="pair asym">
-      <div class="sw cl"><img src="images/webp/d6-via9.webp" alt="Via Ferrata, looking down" loading="lazy" width="1920" height="2560"></div>
-      <div class="sw cr"><img src="images/webp/d6-via10.webp" alt="Cable route close-up" loading="lazy" width="1920" height="2560"></div>
+      <div class="sw cl"><img src="images/webp/d6-via9.webp" alt="Via Ferrata, looking down" loading="lazy" draggable="false" width="1920" height="2560"></div>
+      <div class="sw cr"><img src="images/webp/d6-via10.webp" alt="Cable route close-up" loading="lazy" draggable="false" width="1920" height="2560"></div>
     </div>
 
     <div class="gap-sm"></div>
 
     <!-- Final full-bleed (parallax only) -->
     <div class="bleed bleed-xl">
-      <img src="images/webp/d6-via11.webp" alt="Looking out from the east wall" loading="lazy" class="par-img"
+      <img src="images/webp/d6-via11.webp" alt="Looking out from the east wall" loading="lazy" draggable="false" class="par-img"
         style="object-position: center 58%;" width="2250" height="3000">
     </div>
 
@@ -1125,7 +1156,7 @@
 
     <!-- Very last shot: wipe from bottom upward — like climbing -->
     <div class="sw bleed-md cb">
-      <img src="images/webp/d6-via12.webp" alt="Final descent, Via Ferrata" loading="lazy"
+      <img src="images/webp/d6-via12.webp" alt="Final descent, Via Ferrata" loading="lazy" draggable="false"
         style="object-position: center 35%;" width="3000" height="2250">
     </div>
 
@@ -1153,6 +1184,13 @@
   </footer>
   </div><!-- /.closing-band -->
 
+
+  <!-- ── Kill image drag ghosts in every browser ── -->
+  <script>
+    document.addEventListener('dragstart', function (e) {
+      if (e.target.tagName === 'IMG') e.preventDefault();
+    });
+  </script>
 
   <!-- ── GSAP ── -->
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
@@ -1327,7 +1365,7 @@
 
     /* ─────────────────────────────────────────────────────────────
        Core problem this solves:
-       loading="lazy" images are often not yet decoded when the
+       loading="lazy" draggable="false" images are often not yet decoded when the
        ScrollTrigger fires — the animation plays against a blank
        container and the user never sees it.
   
@@ -1391,6 +1429,9 @@
         { opacity: 0, y: 44 },
         {
           opacity: 1, y: 0, duration: 1, ease: 'power3.out',
+          /* After the forward animation settles at y:0, drop the residual
+             transform and will-change so text selection coords stay accurate. */
+          onComplete: () => gsap.set(el, { clearProps: 'transform,willChange' }),
           scrollTrigger: {
             trigger: el,
             /* Text enters earlier than images so reading flow feels natural */
@@ -1520,21 +1561,6 @@
       p.innerHTML = '';
       snapshot.forEach(n => processNode(n, p));
 
-      /* ── Cursor drift tilt ── */
-      const MAX_TILT = 5;  /* degrees  */
-      const MAX_TX = 12; /* px drift */
-      const MAX_TY = 7;
-      const quoteP = p;
-      document.addEventListener('mousemove', e => {
-        const nx = (e.clientX / window.innerWidth) * 2 - 1; /* −1 … 1 */
-        const ny = (e.clientY / window.innerHeight) * 2 - 1;
-        quoteP.style.transform =
-          `perspective(700px) ` +
-          `rotateX(${(-ny * MAX_TILT).toFixed(2)}deg) ` +
-          `rotateY(${(nx * MAX_TILT).toFixed(2)}deg) ` +
-          `translateX(${(nx * MAX_TX).toFixed(1)}px) ` +
-          `translateY(${(ny * MAX_TY).toFixed(1)}px)`;
-      });
     })();
 
     /* ── Topographic background — marching-squares iso-contours ────────
