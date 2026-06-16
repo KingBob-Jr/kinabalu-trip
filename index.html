@@ -30,25 +30,63 @@
 
     html {
       scroll-behavior: smooth;
+      background: #050509; /* topo canvas fallback */
+      /* Firefox */
+      scrollbar-width: none;
+    }
+
+    /* Chrome / Edge / Safari — hide native scrollbar, keep scrolling */
+    ::-webkit-scrollbar {
+      display: none;
     }
 
     body {
-      background: var(--bg);
+      background: transparent;
       color: var(--text);
       font-family: 'Inter', sans-serif;
       font-weight: 400;
       overflow-x: hidden;
     }
 
-    /* ─── Progress bar ─── */
-    #bar {
+    /* ─── Topographic background ─── */
+    #topo-canvas {
       position: fixed;
-      top: 0;
-      left: 0;
-      height: 2px;
-      width: 0%;
-      background: var(--accent);
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      display: block;
+    }
+
+    #bg-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background: rgba(0, 0, 0, 0.32);
+      pointer-events: none;
+    }
+
+    /* ─── Progress bar ─── */
+    /* ─── Custom scrollbar ─── */
+    #scroll-track {
+      position: fixed;
+      right: 6px;
+      top: 10vh;
+      bottom: 10vh;
+      width: 2px;
+      background: rgba(140, 145, 185, 0.10);
+      border-radius: 1px;
       z-index: 999;
+      pointer-events: none;
+    }
+
+    #scroll-thumb {
+      position: absolute;
+      left: 0;
+      right: 0;
+      border-radius: 1px;
+      background: rgba(140, 145, 185, 0.45);
+      transition: background 0.2s ease;
     }
 
     /* ─── Nav ─── */
@@ -191,6 +229,14 @@
       margin: 0 auto;
       position: relative;
       overflow: hidden;
+    }
+
+    #summit .chapter-intro,
+    #via-ferrata .chapter-intro {
+      --card-alpha: 0;
+      background: rgba(5, 5, 9, var(--card-alpha));
+      box-shadow: 0 0 0 100vmax rgba(5, 5, 9, var(--card-alpha));
+      clip-path: inset(0 -100vmax);
     }
 
     .ghost {
@@ -398,7 +444,7 @@
     .pair {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      gap: 2px;
     }
 
     .pair.asym {
@@ -422,7 +468,7 @@
     .trio {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
+      gap: 2px;
     }
 
     /* ─── Split layout ─── */
@@ -444,6 +490,12 @@
       gap: 1.4rem;
     }
 
+    #summit .split-text,
+    #via-ferrata .split-text {
+      --card-alpha: 0;
+      background: rgba(5, 5, 9, var(--card-alpha));
+    }
+
     .split.img-left .split-text {
       padding: 5.5rem 2.5rem 5.5rem 3.5rem;
     }
@@ -462,6 +514,19 @@
       margin: 0 auto;
     }
 
+    #summit .pullquote {
+      position: relative;
+      --card-alpha: 0;
+      background: rgba(5, 5, 9, var(--card-alpha));
+      box-shadow: 0 0 0 100vmax rgba(5, 5, 9, var(--card-alpha));
+      clip-path: inset(0 -100vmax);
+    }
+
+    .closing-band {
+      --card-alpha: 0;
+      background: rgba(5, 5, 9, var(--card-alpha));
+    }
+
     .pullquote p {
       font-family: 'Inter', sans-serif;
       font-size: clamp(1.6rem, 3.2vw, 3.2rem);
@@ -478,7 +543,7 @@
     /* ─── Final quote: letter morph + cursor tilt ─── */
     /* The cursor tilt is applied via JS inline transform;
        transition here keeps it smooth and elastic */
-    #final-quote {
+    #final-quote p {
       transition: transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
       will-change: transform;
       transform-origin: center center;
@@ -527,13 +592,12 @@
     }
 
     .gap-sm {
-      height: 12px;
+      height: 2px;
     }
 
     /* ─── Footer ─── */
     footer {
-      padding: 7rem 2.5rem 4.5rem;
-      border-top: 1px solid rgba(255, 255, 255, .07);
+      padding: 3rem 2.5rem 2.5rem;
     }
 
     .footer-row {
@@ -544,7 +608,7 @@
 
     .footer-wm {
       font-family: 'Big Shoulders Display', sans-serif;
-      font-size: clamp(4rem, 10vw, 11rem);
+      font-size: clamp(2.5rem, 5vw, 5.5rem);
       font-weight: 900;
       line-height: .85;
       color: rgba(255, 255, 255, .07);
@@ -692,7 +756,7 @@
       }
 
       footer {
-        padding: 4rem 1.5rem 3rem;
+        padding: 2.5rem 1.5rem 2rem;
       }
     }
   </style>
@@ -700,16 +764,20 @@
 
 <body>
 
-  <div id="bar"></div>
+  <canvas id="topo-canvas" aria-hidden="true"></canvas>
+  <div id="bg-overlay" aria-hidden="true"></div>
+
+  <div id="scroll-track"><div id="scroll-thumb"></div></div>
 
   <!-- ── Nav ── -->
   <nav>
     <a href="#hero" class="nav-logo">Kinabalu</a>
     <ul class="nav-links">
-      <li><a href="#arrival">01 Arrival</a></li>
+      <li><a href="#arrival">01 Islands</a></li>
       <li><a href="#kundasang">02 Kundasang</a></li>
-      <li><a href="#summit">03 Summit</a></li>
-      <li><a href="#via-ferrata">04 Via Ferrata</a></li>
+      <li><a href="#before-climb">03 Before Climb</a></li>
+      <li><a href="#summit">04 Pendant Hut</a></li>
+      <li><a href="#via-ferrata">05 Low&rsquo;s Peak</a></li>
     </ul>
   </nav>
 
@@ -721,7 +789,7 @@
     <div id="hero-bg"></div>
     <div class="hero-overlay"></div>
     <div class="hero-content">
-      <p class="hero-eye" id="hero-eye">Sabah, Malaysia &middot; June 2026</p>
+      <p class="hero-eye" id="hero-eye">Sabah, Malaysia &middot; May 2026</p>
       <h1 class="hero-title" id="hero-title">KINABALU</h1>
       <p class="hero-sub" id="hero-sub">A journey to the roof of Borneo &mdash;&nbsp;4,095&nbsp;metres above the South
         China Sea.</p>
@@ -741,14 +809,10 @@
   <section id="arrival">
     <div class="chapter-intro">
       <span class="ghost" aria-hidden="true">01</span>
-      <p class="ch-label fu">Kota Kinabalu</p>
-      <h2 class="ch-heading">Arrival</h2>
+      <p class="ch-label fu">27 May</p>
+      <h2 class="ch-heading">Islands, then<br>the long road up</h2>
       <p class="ch-body fu">
-        The South China Sea glittered from the taxi window. Kota Kinabalu, seen from the air, is a city that knows
-        exactly where it stands — a Malaysian port town pressed between open water and a solid green wall of mountain.
-        Jetlagged and overheating, we dropped our bags, found cold Milo, and walked to the nearest waterfront. The next
-        morning we were on a boat to Sapi Island, masks fogging, following sea turtles through water too blue to be
-        trusted. For one whole day, we let the mountain wait.
+        The morning belonged to the sea. We island-hopped across Tunku Abdul Rahman Marine Park &mdash; snorkelling the coral off Manukan, then Sapi, then letting the afternoon dissolve into a slow beach day. Lunch by Jesselton Port, dinner shoulder-to-shoulder at the Lido Square hawker stalls, and then the city fell behind us. Two hours of dark highway later we rolled into Hidden Hill in Kundasang just before 9pm &mdash; the air cooler now, the mountain somewhere out there in the black.
       </p>
     </div>
 
@@ -777,15 +841,10 @@
   <section id="kundasang">
     <div class="chapter-intro">
       <span class="ghost" aria-hidden="true">02</span>
-      <p class="ch-label fu">Day Three &middot; 1,500m</p>
-      <h2 class="ch-heading">The Drive to<br>Kundasang</h2>
+      <p class="ch-label fu">28 May</p>
+      <h2 class="ch-heading">Cool air,<br>open hills</h2>
       <p class="ch-body fu">
-        The road out of KK winds upward through palm oil and dense rainforest until the air suddenly cools and
-        everything shifts to a different shade of green. Kundasang sits at 1,500 metres — a highland valley that grows
-        strawberries and vegetables for half of Sabah. We pulled off at Sosodikon Hill to watch the evening light drag
-        long shadows across the valley floor. The mountain wasn't visible yet. It hid behind its own cloud. We ate at a
-        hawker stall, the kind where the tables wobble and the laksa is perfect, and went to bed early. Tomorrow we
-        would register at the park.
+        Kundasang mornings are made for slow starts. We spent ours at Desa Dairy Farm &mdash; a walk through the green, a few activities, and lunch at a spot our driver swore by (he was right). The afternoon got louder: ATVs tearing up the trails at Borneo Adventure Sport and the scramble up Sosodikon Hill next door. We closed the day at Anooh Coffee, mountain views on one side and the day&rsquo;s dust still on our boots.
       </p>
     </div>
 
@@ -800,11 +859,9 @@
     <div class="split img-left">
       <div class="sw fl"><img src="images/webp/d3-kundasang2.webp" alt="Kundasang village" loading="lazy" width="2560" height="1920"></div>
       <div class="split-text">
-        <p class="ch-label fu">The highlands</p>
+        <p class="ch-label fu">Desa Dairy Farm</p>
         <p class="body fu">
-          At 1,500 metres the air smells different — a coolness cut with woodsmoke and wet earth. It's highland
-          Southeast Asia: strawberry farms and warung stalls and school buses on mountain roads. The kind of place that
-          slows you down before you realise it's happened.
+          A wide fold of highland valley, green slopes, a few cows, and cooler air than anywhere else we&rsquo;d been in Sabah. The kind of morning that doesn&rsquo;t feel like it costs anything &mdash; until you&rsquo;re back in the car and an hour has gone by.
         </p>
       </div>
     </div>
@@ -831,11 +888,9 @@
     <!-- ATV split: skew-in from right -->
     <div class="split img-right">
       <div class="split-text">
-        <p class="ch-label fu">Before the climb</p>
+        <p class="ch-label fu">Trails and hills</p>
         <p class="body fu">
-          The day before the climb we rode ATVs through red mud, visited a cattle ranch where the cows were indifferent
-          to us in a deeply reassuring way, and ate strawberries still warm from the plant. It felt important to fill up
-          on ordinary pleasures while we still could.
+          The afternoon picked up pace. ATVs through red mud at Borneo Adventure Sport, then the scramble up Sosodikon Hill for the view across the valley. Anooh Coffee as the light went orange, the mountain somewhere just above the clouds.
         </p>
       </div>
       <div class="sw sk"><img src="images/webp/d3-atv.webp" alt="ATV ride, Kundasang" loading="lazy" width="1536" height="2048"></div>
@@ -867,8 +922,8 @@
 
     <div class="pullquote">
       <p class="fu">
-        The mountain wasn&rsquo;t visible yet &mdash;<br>
-        it hid behind <em>its own cloud.</em>
+        Mountain views on one side &mdash;<br>
+        <em>the day&rsquo;s dust still on our boots.</em>
       </p>
     </div>
   </section>
@@ -880,12 +935,12 @@
      wipe-bottom, wipe-top
 ══════════════════════════════════════════ -->
   <section id="before-climb">
-    <div class="interlude-intro">
-      <p class="ch-label fu">Day Four &middot; Eve of the Climb</p>
-      <p class="ch-body fu" style="margin-top:1.2rem;">
-        We registered at the park office and paid our fees in a hall where the walls were covered in summit permits
-        going back decades. That evening the mountain appeared briefly at dusk — the whole silhouette visible for one
-        clear moment before the cloud closed back in. We ate breakfast food for dinner and were in bed by eight.
+    <div class="chapter-intro">
+      <span class="ghost" aria-hidden="true">03</span>
+      <p class="ch-label fu">29 May</p>
+      <h2 class="ch-heading">The calm before<br>the climb</h2>
+      <p class="ch-body fu">
+        One last easy day before the mountain. Breakfast at Second Breakfast Club, then a wander through the rows at Sabah Tea Garden with lunch at the plantation restaurant. A grocery run to Bataras, a dinner we cooked ourselves back at the homestay, and lights out before ten. We knew what was coming.
       </p>
     </div>
 
@@ -923,19 +978,15 @@
       <div class="par-bg" id="par-summit" style="background-image:url('images/webp/d5-kk2.webp');"></div>
       <div class="par-veil"></div>
       <div class="par-content">
-        <p class="par-num fu">03</p>
-        <p class="ch-label fu" style="margin-bottom:.8rem;">4,095m &middot; Low&rsquo;s Peak</p>
-        <h2 class="par-heading">The Summit</h2>
+        <p class="par-num fu">04</p>
+        <p class="ch-label fu" style="margin-bottom:2.5rem;">30 May</p>
+        <h2 class="par-heading">Up to Pendant<br>Hut</h2>
       </div>
     </div>
 
     <div class="chapter-intro">
       <p class="ch-body fu" style="max-width:62ch;">
-        The alarm rang at 2&nbsp;AM. In the headlamp dark the trail became the whole world: the next wooden step, the
-        next fixed rope, the next breath of thinning air. At 3,500 metres my lungs began filing formal complaints. The
-        cold was the sort that doesn&rsquo;t feel cold at first — just precise, as if calibrated. By the final push
-        across the granite moonscape to Low&rsquo;s Peak, every step was a negotiation. And then, just as dawn split
-        open over the South China Sea, there was nowhere left to climb.
+        The shuttle dropped us at Timpohon Gate at 7:30, and by 9 we were climbing. Six kilometres of relentless ascent, a packed lunch eaten somewhere on the way up, the forest thinning as the air did the same. We reached Laban Rata, took our via ferrata briefing at Pendant Hut by 3, ate early, and tried to sleep &mdash; knowing 2am would come fast.
       </p>
     </div>
 
@@ -949,11 +1000,9 @@
     <!-- Summit split: text + fade-zoom -->
     <div class="split img-right">
       <div class="split-text">
-        <p class="ch-label fu">Low&rsquo;s Peak</p>
+        <p class="ch-label fu">Pendant Hut</p>
         <p class="body fu">
-          The highest point between the Himalayas and New Guinea. I sat on cold granite and didn&rsquo;t say anything
-          for a long time. The cloud layer below looked like a second ocean, impossibly still. We had earned every
-          centimetre of that view with every blister.
+          Laban Rata is a different altitude entirely &mdash; air noticeably thinner, the canopy long gone. We took the via ferrata briefing at Pendant Hut, ate our meal early, and tried to sleep while the temperature dropped outside. 2am would come fast.
         </p>
       </div>
       <div class="sw zn"><img src="images/webp/d5-kk4.webp" alt="View from Low's Peak" loading="lazy" width="1707" height="2560"></div>
@@ -965,11 +1014,9 @@
     <div class="split img-left">
       <div class="sw cl"><img src="images/webp/d5-kk5.webp" alt="Granite plateau, Kinabalu" loading="lazy" width="2560" height="1707"></div>
       <div class="split-text">
-        <p class="ch-label fu">Above the clouds</p>
+        <p class="ch-label fu">Above the cloud</p>
         <p class="body fu">
-          The summit plateau is raw granite — no soil, no vegetation, just polished rock in the half-light. Before the
-          sun rises it looks like another planet. After it rises, it looks like a painting of another planet. Either
-          way, you feel very small and very awake.
+          By the time we reached Laban Rata the cloud layer had dropped below us. Looking back down the trail, the valley floor was gone. Looking up, the granite slabs rose into a sky that was already beginning to darken.
         </p>
       </div>
     </div>
@@ -985,8 +1032,8 @@
 
     <div class="pullquote">
       <p class="fu">
-        There was nowhere left to climb &mdash;<br>
-        <em>4,095 metres of nowhere.</em>
+        Tried to sleep &mdash;<br>
+        <em>knowing 2am would come fast.</em>
       </p>
     </div>
   </section>
@@ -1003,19 +1050,15 @@
       <div class="par-bg" id="par-via" style="background-image:url('images/webp/d6-via.webp');"></div>
       <div class="par-veil" style="background:rgba(13,13,13,.58)"></div>
       <div class="par-content">
-        <p class="par-num fu">04</p>
-        <p class="ch-label fu" style="margin-bottom:.8rem;">Via Ferrata</p>
-        <h2 class="par-heading">The Wall</h2>
+        <p class="par-num fu">05</p>
+        <p class="ch-label fu" style="margin-bottom:2.5rem;">31 May</p>
+        <h2 class="par-heading">Low&rsquo;s Peak &mdash;<br>4,095m</h2>
       </div>
     </div>
 
     <div class="chapter-intro">
       <p class="ch-body fu" style="max-width:62ch;">
-        Six hours after reaching the summit, I was back on the mountain — this time clipped to a steel cable bolted into
-        the granite face. The Via Ferrata descends the sheer east wall of the summit plateau, and it turns out <em
-          style="color:var(--text);font-style:italic;">via ferrata</em> is Italian for &ldquo;suspended above a cloud
-        with shaking legs.&rdquo; Our guide moved with the easy confidence of someone who has done this four hundred
-        times. I moved with the concentrated focus of someone doing it exactly once.
+        Up at 2am, head torches cutting the dark, the final push to the top. We reached Low&rsquo;s Peak &mdash; 4,095 metres &mdash; just as the sun broke the horizon. Then the part nobody quite prepares you for: seven hours on Walk the Torq, the world&rsquo;s highest via ferrata, hands and boots against bare granite. We collected our bags from Pendant Hut, caught a short, hard-earned breather, and made the full descent to Timpohon Gate, finishing around 10pm &mdash; wrecked, in the best possible way.
       </p>
     </div>
 
@@ -1055,11 +1098,9 @@
     <div class="split img-left">
       <div class="sw zn"><img src="images/webp/d6-via8.webp" alt="Hanging on the wall" loading="lazy" width="1920" height="2560"></div>
       <div class="split-text">
-        <p class="ch-label fu">The descent</p>
+        <p class="ch-label fu">Walk the Torq</p>
         <p class="body fu">
-          The valley appeared below through gaps in the mist, impossibly far down. You clip your carabiner to the next
-          bolt, find the next foothold, breathe. One section at a time. The mountain lets you down slowly, as if
-          reluctant to be done with you.
+          Seven hours on the world&rsquo;s highest via ferrata &mdash; hands and boots against bare granite, the valley below measuring itself in cloud-layers. We collected our bags from Pendant Hut and kept moving. Timpohon Gate by 10pm, wrecked, in the best possible way.
         </p>
       </div>
     </div>
@@ -1088,27 +1129,29 @@
         style="object-position: center 35%;" width="3000" height="2250">
     </div>
 
+  </section>
+
+  <div class="closing-band">
     <div class="pullquote" id="final-quote">
       <p class="fu">
         The valley below,<br>
         impossibly far &mdash; <em>impossibly beautiful.</em>
       </p>
     </div>
-  </section>
 
-
-  <!-- ── Footer ── -->
-  <footer>
-    <div class="footer-row">
-      <p class="footer-wm" aria-hidden="true">Kinabalu</p>
-      <div class="footer-meta">
-        <span class="hi">Sabah, Malaysia</span>
-        <span>Mount Kinabalu &amp; Kundasang</span>
-        <span>June 2026</span>
-        <span class="name">Yiping</span>
+    <!-- ── Footer ── -->
+    <footer>
+      <div class="footer-row">
+        <p class="footer-wm" aria-hidden="true">Kinabalu</p>
+        <div class="footer-meta">
+          <span class="hi">Sabah, Malaysia</span>
+          <span>Mount Kinabalu &amp; Kundasang</span>
+          <span>May 2026</span>
+          <span class="name">Yiping</span>
+        </div>
       </div>
-    </div>
   </footer>
+  </div><!-- /.closing-band -->
 
 
   <!-- ── GSAP ── -->
@@ -1117,13 +1160,26 @@
   <script>
     gsap.registerPlugin(ScrollTrigger);
 
-    /* ── Progress bar ── */
-    ScrollTrigger.create({
-      trigger: document.body,
-      start: 'top top',
-      end: 'bottom bottom',
-      onUpdate: s => document.getElementById('bar').style.width = (s.progress * 100) + '%'
-    });
+    /* ── Custom scrollbar ── */
+    (function () {
+      const thumb = document.getElementById('scroll-thumb');
+      const track = document.getElementById('scroll-track');
+      function updateThumb() {
+        const doc   = document.documentElement;
+        const scrolled  = doc.scrollTop  || document.body.scrollTop;
+        const maxScroll = doc.scrollHeight - doc.clientHeight;
+        const trackH    = track.clientHeight;
+        const minThumb  = 32;
+        const ratio     = doc.clientHeight / doc.scrollHeight;
+        const thumbH    = Math.max(minThumb, trackH * ratio);
+        const pos       = maxScroll > 0 ? (scrolled / maxScroll) * (trackH - thumbH) : 0;
+        thumb.style.height = thumbH + 'px';
+        thumb.style.top    = pos    + 'px';
+      }
+      window.addEventListener('scroll', updateThumb, { passive: true });
+      window.addEventListener('resize', updateThumb, { passive: true });
+      updateThumb();
+    })();
 
     /* ── Hero entrance (title handled separately by scramble below) ── */
     gsap.timeline({ defaults: { ease: 'power3.out' } })
@@ -1345,6 +1401,20 @@
       );
     });
 
+    /* ── Text card background fade-in (matches .fu timing) ── */
+    document.querySelectorAll('#summit .chapter-intro, #via-ferrata .chapter-intro, #summit .split-text, #via-ferrata .split-text, #summit .pullquote, .closing-band').forEach(el => {
+      gsap.to(el, {
+        '--card-alpha': 0.78,
+        duration: 0.9,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 85%',
+          toggleActions: 'play none none reverse'
+        }
+      });
+    });
+
     /* ── Section heading letter-split + stagger reveal ──────────────────
        Each .ch-heading and .par-heading has its text wrapped letter-by-
        letter into .heading-letter spans at runtime so GSAP can stagger
@@ -1454,16 +1524,190 @@
       const MAX_TILT = 5;  /* degrees  */
       const MAX_TX = 12; /* px drift */
       const MAX_TY = 7;
+      const quoteP = p;
       document.addEventListener('mousemove', e => {
         const nx = (e.clientX / window.innerWidth) * 2 - 1; /* −1 … 1 */
         const ny = (e.clientY / window.innerHeight) * 2 - 1;
-        quote.style.transform =
+        quoteP.style.transform =
           `perspective(700px) ` +
           `rotateX(${(-ny * MAX_TILT).toFixed(2)}deg) ` +
           `rotateY(${(nx * MAX_TILT).toFixed(2)}deg) ` +
           `translateX(${(nx * MAX_TX).toFixed(1)}px) ` +
           `translateY(${(ny * MAX_TY).toFixed(1)}px)`;
       });
+    })();
+
+    /* ── Topographic background — marching-squares iso-contours ────────
+       A grid of Gaussian "mountain peaks" drifts slowly over time.
+       Marching squares traces iso-contour lines at multiple elevation
+       levels, producing the closed concentric rings of a topo map.
+       Every 3rd level is an "index line" — bolder, like real topo maps.
+       Scroll shifts the palette coast → islands → highland → dusk →
+       altitude → granite, with vivid line colours for clear visibility.
+    ──────────────────────────────────────────────────────────────────── */
+    (function () {
+      const canvas = document.getElementById('topo-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d', { alpha: false });
+
+      /* ── Scroll colour palette ── */
+      const STOPS = [
+        { p: 0,   bg: [5,   5,   9],   ln: [140, 145, 185] },
+        { p: 0.5, bg: [70,  75, 115],  ln: [220, 225, 255] },
+        { p: 1,   bg: [205, 210, 230], ln: [30,  35,  65]  },
+      ];
+
+      function lerp3(a, b, t) {
+        return [a[0]+(b[0]-a[0])*t, a[1]+(b[1]-a[1])*t, a[2]+(b[2]-a[2])*t];
+      }
+      function palette(p) {
+        p = Math.max(0, Math.min(1, p));
+        for (let i = 0; i < STOPS.length - 1; i++) {
+          if (p <= STOPS[i+1].p) {
+            const t = (p - STOPS[i].p) / (STOPS[i+1].p - STOPS[i].p);
+            return { bg: lerp3(STOPS[i].bg, STOPS[i+1].bg, t), ln: lerp3(STOPS[i].ln, STOPS[i+1].ln, t) };
+          }
+        }
+        const L = STOPS[STOPS.length-1];
+        return { bg: L.bg.slice(), ln: L.ln.slice() };
+      }
+
+      /* ── Terrain: 5 Gaussian peaks that slowly orbit ──
+         [baseX, baseY, height, sharpness, xSpeed, ySpeed, xAmp, yAmp] */
+      const PEAKS = [
+        [0.28, 0.32, 1.40, 3, 0.80, 0.60, 0.09, 0.07],
+        [0.70, 0.62, 1.10, 2, 0.70, 0.90, 0.08, 0.08],
+        [0.52, 0.18, 0.90, 3, 1.10, 1.00, 0.06, 0.06],
+        [0.14, 0.75, 0.85, 2, 0.90, 0.70, 0.07, 0.07],
+        [0.86, 0.25, 1.00, 3, 0.60, 1.10, 0.06, 0.06],
+      ];
+
+      function evalField(nx, ny, t) {
+        let v = 0;
+        for (const [bx, by, h, s, xs, ys, xa, ya] of PEAKS) {
+          const dx = nx - (bx + xa * Math.sin(t * xs));
+          const dy = ny - (by + ya * Math.cos(t * ys));
+          v += h * Math.exp(-(dx*dx + dy*dy) * s * 10);
+        }
+        /* Large-scale undulation ties peaks into a coherent landscape */
+        v += Math.sin(nx * 3.5 + t * 1.5) * Math.cos(ny * 2.8 - t * 1.2) * 0.10;
+        v += Math.sin(nx * 6.0 - ny * 5.0 + t * 1.8) * 0.05;
+        return v;
+      }
+
+      /* ── Marching-squares lookup ──────────────────────────────────────
+         Corners: TL=bit8, TR=bit4, BR=bit2, BL=bit1
+         Edges:   0=Top  1=Right  2=Bottom  3=Left
+         Each entry lists [e1,e2] pairs — one segment per entry.       */
+      const SEG = [
+        [],          // 0  all below
+        [[3,2]],     // 1  BL above
+        [[2,1]],     // 2  BR above
+        [[3,1]],     // 3  BR+BL
+        [[0,1]],     // 4  TR above
+        [[0,1],[3,2]], // 5  TR+BL (saddle)
+        [[0,2]],     // 6  TR+BR
+        [[0,3]],     // 7  TR+BR+BL
+        [[0,3]],     // 8  TL above
+        [[0,2]],     // 9  TL+BL
+        [[0,3],[1,2]], // 10 TL+BR (saddle)
+        [[0,1]],     // 11 TL+BR+BL... wait — TL+TR+BL
+        [[3,1]],     // 12 TL+TR
+        [[1,2]],     // 13 TL+TR+BL
+        [[3,2]],     // 14 TL+TR+BR
+        [],          // 15 all above
+      ];
+
+      /* Interpolate crossing position on one edge */
+      function ex(e, ix, iy, sx, sy, v0,v1,v2,v3, lv) {
+        const f = (a,b,va,vb) => Math.abs(vb-va)<1e-9 ? (a+b)*0.5 : a+(lv-va)/(vb-va)*(b-a);
+        if (e===0) return [f(ix, ix+sx, v0,v1), iy];
+        if (e===1) return [ix+sx, f(iy, iy+sy, v1,v2)];
+        if (e===2) return [f(ix, ix+sx, v3,v2), iy+sy];
+                   return [ix,    f(iy, iy+sy, v0,v3)];
+      }
+
+      /* ── Setup ── */
+      const mob = window.matchMedia('(max-width:800px)').matches;
+      const GW  = mob ? 55  : 100;   /* grid columns */
+      const GH  = mob ? 36  : 65;    /* grid rows    */
+      const NLV = mob ? 4   : 5;     /* contour levels */
+      const SPD = 0.0003;            /* time units per ms — visible but calm */
+
+      const grid = new Float32Array(GW * GH);
+      let W, H;
+      function resize() { W = canvas.width = innerWidth; H = canvas.height = innerHeight; }
+      resize();
+      window.addEventListener('resize', resize, { passive: true });
+
+      let curBg = STOPS[0].bg.slice(), curLn = STOPS[0].ln.slice();
+      let tgtBg = curBg.slice(),       tgtLn = curLn.slice();
+
+      window.addEventListener('scroll', () => {
+        const max = document.documentElement.scrollHeight - innerHeight;
+        const c = palette(max > 0 ? scrollY / max : 0);
+        tgtBg = c.bg; tgtLn = c.ln;
+      }, { passive: true });
+
+      let t0 = null, fn = 0;
+      function draw(ts) {
+        if (!t0) t0 = ts;
+        const t = (ts - t0) * SPD;
+        fn++;
+        if (mob && fn & 1) { requestAnimationFrame(draw); return; } /* 30 fps on mobile */
+
+        /* Smooth colour blend toward scroll target */
+        for (let i = 0; i < 3; i++) {
+          curBg[i] += (tgtBg[i] - curBg[i]) * 0.04;
+          curLn[i] += (tgtLn[i] - curLn[i]) * 0.04;
+        }
+
+
+        /* Fill background */
+        ctx.fillStyle = `rgb(${~~curBg[0]},${~~curBg[1]},${~~curBg[2]})`;
+        ctx.fillRect(0, 0, W, H);
+
+        /* Evaluate terrain grid + track range */
+        let fmin = Infinity, fmax = -Infinity;
+        for (let j = 0; j < GH; j++) {
+          for (let i = 0; i < GW; i++) {
+            const v = evalField(i/(GW-1), j/(GH-1), t);
+            grid[j*GW+i] = v;
+            if (v < fmin) fmin = v;
+            if (v > fmax) fmax = v;
+          }
+        }
+        if (fmax - fmin < 0.01) { requestAnimationFrame(draw); return; }
+
+        const sx = W/(GW-1), sy = H/(GH-1);
+        const lR = ~~curLn[0], lG = ~~curLn[1], lB = ~~curLn[2];
+
+        /* Marching squares — one ctx.beginPath per level for batch strokes */
+        for (let li = 0; li < NLV; li++) {
+          const lv   = fmin + (fmax-fmin) * (li+1) / (NLV+1);
+          ctx.lineWidth   = 1.5;
+          ctx.strokeStyle = `rgba(${lR},${lG},${lB},0.55)`;
+          ctx.beginPath();
+
+          for (let j = 0; j < GH-1; j++) {
+            for (let i = 0; i < GW-1; i++) {
+              const v0=grid[j*GW+i], v1=grid[j*GW+i+1],
+                    v2=grid[(j+1)*GW+i+1], v3=grid[(j+1)*GW+i];
+              const ci = ((v0>lv)?8:0)|((v1>lv)?4:0)|((v2>lv)?2:0)|((v3>lv)?1:0);
+              if (!SEG[ci].length) continue;
+              const ix=i*sx, iy=j*sy;
+              for (const [e1,e2] of SEG[ci]) {
+                const [x1,y1] = ex(e1, ix,iy,sx,sy, v0,v1,v2,v3, lv);
+                const [x2,y2] = ex(e2, ix,iy,sx,sy, v0,v1,v2,v3, lv);
+                ctx.moveTo(x1,y1); ctx.lineTo(x2,y2);
+              }
+            }
+          }
+          ctx.stroke();
+        }
+        requestAnimationFrame(draw);
+      }
+      requestAnimationFrame(draw);
     })();
 
     /* Recalculate all trigger positions after fonts + lazy images have
