@@ -912,18 +912,26 @@
         transform: scale(1.15);
       }
 
-      /* Top-aligned, just below the fixed nav's menu icon, instead of
-         centred — minimises empty blurred space above the photo. */
+      /* Flush to the very top of the screen — the fixed nav overlays
+         on top of it. Cropped on all four sides to zoom in on the
+         hikers as much as possible while keeping all five fully in
+         frame: top/bottom trims the sky/mist and foreground rock,
+         left/right trims the empty margin out to the two outer
+         hikers' arms. Crop window measured from the source photo
+         (3000x2000): visible box is x 440–2620, y 320–1750. */
       #hero-bg {
         position: relative;
         inset: auto;
-        margin-top: 5rem;
+        overflow: hidden;
+        height: 65.59vw;
       }
 
       #hero-bg img {
+        width: 137.61%;
         height: auto;
         object-fit: unset;
         object-position: unset;
+        transform: translate(-20.18vw, -14.68vw);
       }
 
       .hero-content {
