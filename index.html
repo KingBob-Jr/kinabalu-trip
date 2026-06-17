@@ -350,6 +350,12 @@
     }
 
     /* ─── Section heading letter-split effect ─── */
+    /* Keeps each word's letters together so the line only wraps at real spaces */
+    .heading-word {
+      display: inline-block;
+      white-space: nowrap;
+    }
+
     /* Default: outlined translucent letters with accent stroke */
     .heading-letter {
       display: inline-block;
@@ -826,12 +832,17 @@
       }
 
       .par-section {
-        height: 80vw;
-        min-height: unset;
+        height: auto;
+        min-height: 80vw;
+        padding: 4rem 0;
       }
 
       .par-content {
         padding: 0 1.5rem;
+      }
+
+      .par-num {
+        font-size: clamp(4.5rem, 16vw, 7rem);
       }
 
       .pullquote {
@@ -1576,15 +1587,34 @@
       /* Split childNodes so <br> elements survive intact */
       const nodes = [...heading.childNodes];
       heading.innerHTML = '';
+      /* Letters are individual inline-block spans, so a gap between two
+         adjacent ones (with no actual space) is still a valid wrap point
+         to the browser — words can break mid-letter on narrow screens.
+         Group each word's letters into a nowrap wrapper so it stays atomic. */
+      let wordWrap = null;
       nodes.forEach(node => {
         if (node.nodeType === 3 /* TEXT_NODE */) {
           [...node.textContent].forEach(char => {
+            if (char === ' ') {
+              wordWrap = null;
+              const space = document.createElement('span');
+              space.className = 'heading-letter';
+              space.textContent = ' ';
+              heading.appendChild(space);
+              return;
+            }
+            if (!wordWrap) {
+              wordWrap = document.createElement('span');
+              wordWrap.className = 'heading-word';
+              heading.appendChild(wordWrap);
+            }
             const span = document.createElement('span');
             span.className = 'heading-letter';
-            span.textContent = char === ' ' ? ' ' : char;
-            heading.appendChild(span);
+            span.textContent = char;
+            wordWrap.appendChild(span);
           });
         } else if (node.nodeName === 'BR') {
+          wordWrap = null;
           heading.appendChild(document.createElement('br'));
         }
       });
