@@ -260,6 +260,12 @@
       display: block;
     }
 
+    /* Mobile-only ambient blurred fill layer — see mobile media query
+       below. Hidden on desktop, where #hero-bg alone covers the hero. */
+    #hero-bg-blur {
+      display: none;
+    }
+
     .hero-overlay {
       position: absolute;
       inset: 0;
@@ -874,22 +880,42 @@
         opacity: 1;
       }
 
-      /* Mobile hero: show the full wide group photo at its natural
-         aspect ratio (no cropping) instead of a full-bleed cover image,
-         since a tall narrow viewport would otherwise crop the outer
-         hikers out of frame. The title moves below the photo instead
-         of overlaying it. */
+      /* Mobile hero: a full-screen, heavily blurred + darkened copy
+         of the photo fills the section as ambient background (its
+         cropping doesn't matter since it's just texture/colour), while
+         a second, sharp copy sits on top at full width / natural
+         height so every hiker stays visible — no cropping. */
       #hero {
+        height: 100svh;
+        min-height: 480px;
+      }
+
+      @supports (height: 100dvh) {
+        #hero {
+          height: 100dvh;
+        }
+      }
+
+      #hero-bg-blur {
         display: block;
-        height: auto;
-        min-height: 0;
-        overflow: visible;
+        position: absolute;
+        inset: 0;
+      }
+
+      #hero-bg-blur img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center 30%;
+        filter: blur(30px) brightness(.5) saturate(1.1);
+        transform: scale(1.15);
       }
 
       #hero-bg {
-        position: relative;
-        inset: auto;
-        width: 100%;
+        position: absolute;
+        inset: auto 0;
+        top: 50%;
+        transform: translateY(-50%);
       }
 
       #hero-bg img {
@@ -898,12 +924,8 @@
         object-position: unset;
       }
 
-      .hero-overlay {
-        display: none;
-      }
-
       .hero-content {
-        padding: 2.25rem 1.5rem 2.75rem;
+        padding: 0 1.5rem 3rem;
       }
 
       .hero-eye {
@@ -1074,6 +1096,9 @@
      HERO
 ══════════════════════════════════════════ -->
   <section id="hero">
+    <div id="hero-bg-blur" aria-hidden="true">
+      <img src="images/webp/d5-kk.webp" alt="" width="3000" height="2000">
+    </div>
     <div id="hero-bg">
       <img src="images/webp/d5-kk.webp" alt="Hikers pausing on the granite slopes of Mount Kinabalu, mist rolling over the ridge above" fetchpriority="high" width="3000" height="2000">
     </div>
