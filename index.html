@@ -874,19 +874,36 @@
         opacity: 1;
       }
 
+      /* Mobile hero: show the full wide group photo at its natural
+         aspect ratio (no cropping) instead of a full-bleed cover image,
+         since a tall narrow viewport would otherwise crop the outer
+         hikers out of frame. The title moves below the photo instead
+         of overlaying it. */
       #hero {
-        height: 100svh;
-        min-height: 480px;
+        display: block;
+        height: auto;
+        min-height: 0;
+        overflow: visible;
       }
 
-      @supports (height: 100dvh) {
-        #hero {
-          height: 100dvh;
-        }
+      #hero-bg {
+        position: relative;
+        inset: auto;
+        width: 100%;
+      }
+
+      #hero-bg img {
+        height: auto;
+        object-fit: unset;
+        object-position: unset;
+      }
+
+      .hero-overlay {
+        display: none;
       }
 
       .hero-content {
-        padding: 0 1.5rem 3rem;
+        padding: 2.25rem 1.5rem 2.75rem;
       }
 
       .hero-eye {
@@ -1572,8 +1589,9 @@
       });
     }
 
-    /* ── Hero parallax ── */
-    if (!REDUCE_MOTION) {
+    /* ── Hero parallax (desktop only — mobile shows the full image
+       at natural height with no absolute-position travel room) ── */
+    if (!REDUCE_MOTION && !window.matchMedia('(max-width: 800px)').matches) {
       gsap.to('#hero-bg', {
         yPercent: 28, ease: 'none',
         scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true }
