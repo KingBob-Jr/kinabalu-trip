@@ -1485,6 +1485,11 @@
       if (!waiting.length) { play(); return; }
       let n = waiting.length;
       waiting.forEach(img => {
+        /* The slide-in transform applied above shifts the img's own box,
+           which can throw off the browser's native lazy-load distance
+           heuristic and stall the fetch. Force it eager the moment the
+           trigger fires so loading isn't left to that heuristic. */
+        if (img.loading === 'lazy') img.loading = 'eager';
         const done = () => { if (!--n && gate.on) play(); };
         img.addEventListener('load', done, { once: true });
         img.addEventListener('error', done, { once: true }); /* still animate on 404 */
