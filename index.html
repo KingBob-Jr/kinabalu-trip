@@ -6,6 +6,22 @@
   <script>history.scrollRestoration = 'manual';</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kinabalu — A Journey to the Roof of Borneo</title>
+  <meta name="description" content="A six-day journey to the roof of Borneo — Kota Kinabalu's islands, the Kundasang highlands, and the summit push to Low's Peak via the world's highest via ferrata.">
+  <link rel="canonical" href="https://kingbob-jr.github.io/kinabalu-trip/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Kinabalu — A Journey to the Roof of Borneo">
+  <meta property="og:description" content="A six-day journey to the roof of Borneo — Kota Kinabalu's islands, the Kundasang highlands, and the summit push to Low's Peak via the world's highest via ferrata.">
+  <meta property="og:url" content="https://kingbob-jr.github.io/kinabalu-trip/">
+  <meta property="og:image" content="https://kingbob-jr.github.io/kinabalu-trip/images/webp/d5-kk.webp">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kinabalu — A Journey to the Roof of Borneo">
+  <meta name="twitter:description" content="A six-day journey to the roof of Borneo — Kota Kinabalu's islands, the Kundasang highlands, and the summit push to Low's Peak via the world's highest via ferrata.">
+  <meta name="twitter:image" content="https://kingbob-jr.github.io/kinabalu-trip/images/webp/d5-kk.webp">
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230D0D0D'/%3E%3Cpath d='M8 47 L24 21 L32 33 L41 16 L57 47 Z' fill='%23C05A38'/%3E%3C/svg%3E">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -57,6 +73,17 @@
     /* Chrome / Edge / Safari — hide native scrollbar, keep scrolling */
     ::-webkit-scrollbar {
       display: none;
+    }
+
+    /* ─── Respect reduced-motion preference ─── */
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      .morph-letter {
+        animation: none;
+      }
     }
 
     body {
@@ -200,6 +227,12 @@
 
     /* ─── Back to top (mobile only) ─── */
     .back-to-top {
+      display: none;
+    }
+
+    /* ─── Mobile nav toggle + menu (mobile only) ─── */
+    .nav-toggle,
+    .mobile-menu {
       display: none;
     }
 
@@ -757,6 +790,83 @@
         transform: translateY(0);
       }
 
+      body.menu-open .back-to-top {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .nav-toggle {
+        display: block;
+        position: relative;
+        width: 26px;
+        height: 18px;
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+      }
+
+      .nav-toggle span {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: #fff;
+        transition: transform .3s ease, opacity .3s ease, top .3s ease;
+      }
+
+      .nav-toggle span:nth-child(1) { top: 0; }
+      .nav-toggle span:nth-child(2) { top: 8px; }
+      .nav-toggle span:nth-child(3) { top: 16px; }
+
+      .nav-toggle.open span:nth-child(1) { top: 8px; transform: rotate(45deg); }
+      .nav-toggle.open span:nth-child(2) { opacity: 0; }
+      .nav-toggle.open span:nth-child(3) { top: 8px; transform: rotate(-45deg); }
+
+      .mobile-menu {
+        display: flex;
+        position: fixed;
+        inset: 0;
+        z-index: 90;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: rgba(13, 13, 13, .97);
+        backdrop-filter: blur(6px);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity .3s ease;
+      }
+
+      .mobile-menu.open {
+        opacity: 1;
+        pointer-events: all;
+      }
+
+      .mobile-menu-links {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2.2rem;
+      }
+
+      .mobile-menu-links a {
+        font-family: 'Big Shoulders Display', sans-serif;
+        font-size: 1.9rem;
+        font-weight: 700;
+        letter-spacing: .03em;
+        color: #fff;
+        text-decoration: none;
+        opacity: .7;
+        transition: opacity .2s;
+      }
+
+      .mobile-menu-links a:active,
+      .mobile-menu-links a:focus-visible {
+        opacity: 1;
+      }
+
       .hero-content {
         padding: 0 1.5rem 3.5rem;
       }
@@ -894,7 +1004,20 @@
       <li><a href="#summit">04 Pendant Hut</a></li>
       <li><a href="#via-ferrata">05 Low&rsquo;s Peak</a></li>
     </ul>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
+
+  <div class="mobile-menu" id="mobile-menu">
+    <ul class="mobile-menu-links">
+      <li><a href="#arrival">01 Islands</a></li>
+      <li><a href="#kundasang">02 Kundasang</a></li>
+      <li><a href="#before-climb">03 Before Climb</a></li>
+      <li><a href="#summit">04 Pendant Hut</a></li>
+      <li><a href="#via-ferrata">05 Low&rsquo;s Peak</a></li>
+    </ul>
+  </div>
 
   <button id="back-to-top" class="back-to-top" aria-label="Back to top">&uarr;</button>
 
@@ -1283,6 +1406,11 @@
   <script>
     gsap.registerPlugin(ScrollTrigger);
 
+    /* Respect the OS-level "reduce motion" preference: scroll-triggered
+       slides/fades/parallax/stagger effects are skipped and their elements
+       are simply set to their final, visible state instead. */
+    const REDUCE_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     /* ── Image fade-in on load ── */
     document.querySelectorAll('img').forEach(img => {
       if (img.complete && img.naturalWidth !== 0) { img.classList.add('loaded'); return; }
@@ -1323,11 +1451,35 @@
       btn.addEventListener('click', () => window.scrollTo({ top: 0 }));
     })();
 
+    /* ── Mobile nav toggle (mobile only) ── */
+    (function () {
+      const toggle = document.getElementById('nav-toggle');
+      const menu = document.getElementById('mobile-menu');
+      function close() {
+        toggle.classList.remove('open');
+        menu.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+        document.body.classList.remove('menu-open');
+      }
+      toggle.addEventListener('click', () => {
+        const open = !toggle.classList.contains('open');
+        toggle.classList.toggle('open', open);
+        menu.classList.toggle('open', open);
+        toggle.setAttribute('aria-expanded', String(open));
+        document.body.classList.toggle('menu-open', open);
+      });
+      menu.querySelectorAll('a').forEach(a => a.addEventListener('click', close));
+    })();
+
     /* ── Hero entrance (title handled separately by scramble below) ── */
-    gsap.timeline({ defaults: { ease: 'power3.out' } })
-      .from('#hero-eye', { opacity: 0, y: 16, duration: 1, delay: 0.4 })
-      .from('#hero-sub', { opacity: 0, y: 22, duration: 1 }, '>+1.8')
-      .from('#scroll-cue', { opacity: 0, duration: 0.8 }, '-=0.5');
+    if (REDUCE_MOTION) {
+      gsap.set(['#hero-eye', '#hero-sub', '#scroll-cue'], { opacity: 1, y: 0 });
+    } else {
+      gsap.timeline({ defaults: { ease: 'power3.out' } })
+        .from('#hero-eye', { opacity: 0, y: 16, duration: 1, delay: 0.4 })
+        .from('#hero-sub', { opacity: 0, y: 22, duration: 1 }, '>+1.8')
+        .from('#scroll-cue', { opacity: 0, duration: 0.8 }, '-=0.5');
+    }
 
     /* ── Hero title scramble / decode effect ──────────────────────────
        Each character position rapidly cycles A–Z, then locks into the
@@ -1338,6 +1490,7 @@
     (function scrambleHero() {
       const el = document.getElementById('hero-title');
       const FINAL = 'KINABALU';
+      if (REDUCE_MOTION) { el.textContent = FINAL; return; }
       const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
       const DURATION = 3400; /* ms — total time from first tick to last lock */
       const DELAY = 350;  /* ms — pause before scramble starts */
@@ -1371,27 +1524,33 @@
     })();
 
     /* ── Scroll-cue pulse ── */
-    gsap.to('#scroll-line', {
-      scaleY: 0.2, transformOrigin: 'top center',
-      repeat: -1, yoyo: true, duration: 1.1, ease: 'sine.inOut'
-    });
+    if (!REDUCE_MOTION) {
+      gsap.to('#scroll-line', {
+        scaleY: 0.2, transformOrigin: 'top center',
+        repeat: -1, yoyo: true, duration: 1.1, ease: 'sine.inOut'
+      });
+    }
 
     /* ── Hero parallax ── */
-    gsap.to('#hero-bg', {
-      yPercent: 28, ease: 'none',
-      scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true }
-    });
+    if (!REDUCE_MOTION) {
+      gsap.to('#hero-bg', {
+        yPercent: 28, ease: 'none',
+        scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true }
+      });
+    }
 
     /* ── Parallax section backgrounds ── */
-    ['#par-summit', '#par-via'].forEach(id => {
-      gsap.fromTo(id,
-        { yPercent: -12 },
-        {
-          yPercent: 12, ease: 'none',
-          scrollTrigger: { trigger: id, start: 'top bottom', end: 'bottom top', scrub: true }
-        }
-      );
-    });
+    if (!REDUCE_MOTION) {
+      ['#par-summit', '#par-via'].forEach(id => {
+        gsap.fromTo(id,
+          { yPercent: -12 },
+          {
+            yPercent: 12, ease: 'none',
+            scrollTrigger: { trigger: id, start: 'top bottom', end: 'bottom top', scrub: true }
+          }
+        );
+      });
+    }
 
     /* ── Active nav link on scroll ── */
     document.querySelectorAll('.nav-links a').forEach(link => {
@@ -1406,18 +1565,20 @@
     });
 
     /* ── Full-bleed image parallax ── */
-    gsap.utils.toArray('.par-img').forEach(img => {
-      gsap.fromTo(img,
-        { yPercent: -10 },
-        {
-          yPercent: 10, ease: 'none',
-          scrollTrigger: {
-            trigger: img.closest('.bleed'),
-            start: 'top bottom', end: 'bottom top', scrub: true
+    if (!REDUCE_MOTION) {
+      gsap.utils.toArray('.par-img').forEach(img => {
+        gsap.fromTo(img,
+          { yPercent: -10 },
+          {
+            yPercent: 10, ease: 'none',
+            scrollTrigger: {
+              trigger: img.closest('.bleed'),
+              start: 'top bottom', end: 'bottom top', scrub: true
+            }
           }
-        }
-      );
-    });
+        );
+      });
+    }
 
     /* ════════════════════════════════════════════
        ENTRANCE ANIMATION SYSTEM
@@ -1471,13 +1632,16 @@
       return { target, toVars: eff.o };
     }
 
-    /* Set ALL initial states synchronously before first paint */
-    gsap.utils.toArray('.sw').forEach(wrap => {
-      const eff = getEffect(wrap);
-      if (!eff) return;
-      const el = eff.t === 'wrap' ? wrap : wrap.querySelector('img');
-      gsap.set(el, eff.i);
-    });
+    /* Set ALL initial states synchronously before first paint
+       (skipped under reduced motion — images just appear as they load) */
+    if (!REDUCE_MOTION) {
+      gsap.utils.toArray('.sw').forEach(wrap => {
+        const eff = getEffect(wrap);
+        if (!eff) return;
+        const el = eff.t === 'wrap' ? wrap : wrap.querySelector('img');
+        gsap.set(el, eff.i);
+      });
+    }
 
     /* ─────────────────────────────────────────────────────────────
        Core problem this solves:
@@ -1507,75 +1671,86 @@
       });
     }
 
-    /* ── Standalone .sw elements (not inside .pair or .trio) ── */
-    gsap.utils.toArray('.sw').forEach(wrap => {
-      if (wrap.closest('.pair, .trio')) return;
-      const r = resolve(wrap);
-      if (!r) return;
-
-      const tween = gsap.to(r.target, { ...r.toVars, paused: true });
-      const gate = { on: false };
-
-      ScrollTrigger.create({
-        trigger: wrap,
-        start: 'top 55%',
-        onEnter: () => { gate.on = true; whenReady(wrap, gate, () => tween.play()); },
-        onLeaveBack: () => { gate.on = false; tween.reverse(); }
-      });
-    });
-
-    /* ── Grid .sw elements (.pair / .trio) — staggered timeline ── */
-    gsap.utils.toArray('.pair, .trio').forEach(grid => {
-      const wraps = [...grid.querySelectorAll('.sw')];
-      const tl = gsap.timeline({ paused: true });
-      const gate = { on: false };
-
-      wraps.forEach((wrap, i) => {
+    if (!REDUCE_MOTION) {
+      /* ── Standalone .sw elements (not inside .pair or .trio) ── */
+      gsap.utils.toArray('.sw').forEach(wrap => {
+        if (wrap.closest('.pair, .trio')) return;
         const r = resolve(wrap);
         if (!r) return;
-        tl.to(r.target, { ...r.toVars }, i * 0.14);
+
+        const tween = gsap.to(r.target, { ...r.toVars, paused: true });
+        const gate = { on: false };
+
+        ScrollTrigger.create({
+          trigger: wrap,
+          start: 'top 55%',
+          onEnter: () => { gate.on = true; whenReady(wrap, gate, () => tween.play()); },
+          onLeaveBack: () => { gate.on = false; tween.reverse(); }
+        });
       });
 
-      ScrollTrigger.create({
-        trigger: grid,
-        start: 'top 50%',
-        onEnter: () => { gate.on = true; whenReady(grid, gate, () => tl.play()); },
-        onLeaveBack: () => { gate.on = false; tl.reverse(); }
+      /* ── Grid .sw elements (.pair / .trio) — staggered timeline ── */
+      gsap.utils.toArray('.pair, .trio').forEach(grid => {
+        const wraps = [...grid.querySelectorAll('.sw')];
+        const tl = gsap.timeline({ paused: true });
+        const gate = { on: false };
+
+        wraps.forEach((wrap, i) => {
+          const r = resolve(wrap);
+          if (!r) return;
+          tl.to(r.target, { ...r.toVars }, i * 0.14);
+        });
+
+        ScrollTrigger.create({
+          trigger: grid,
+          start: 'top 50%',
+          onEnter: () => { gate.on = true; whenReady(grid, gate, () => tl.play()); },
+          onLeaveBack: () => { gate.on = false; tl.reverse(); }
+        });
       });
-    });
+    }
 
     /* ── Text fade-up (also reverses on scroll-back) ── */
-    gsap.utils.toArray('.fu').forEach(el => {
-      gsap.fromTo(el,
-        { opacity: 0, y: 44 },
-        {
-          opacity: 1, y: 0, duration: 1, ease: 'power3.out',
-          /* After the forward animation settles at y:0, drop the residual
-             transform and will-change so text selection coords stay accurate. */
-          onComplete: () => gsap.set(el, { clearProps: 'transform,willChange' }),
-          scrollTrigger: {
-            trigger: el,
-            /* Text enters earlier than images so reading flow feels natural */
-            start: 'top 80%',
-            toggleActions: 'play none none reverse'
+    if (REDUCE_MOTION) {
+      gsap.set('.fu', { opacity: 1, y: 0, clearProps: 'transform,willChange' });
+    } else {
+      gsap.utils.toArray('.fu').forEach(el => {
+        gsap.fromTo(el,
+          { opacity: 0, y: 44 },
+          {
+            opacity: 1, y: 0, duration: 1, ease: 'power3.out',
+            /* After the forward animation settles at y:0, drop the residual
+               transform and will-change so text selection coords stay accurate. */
+            onComplete: () => gsap.set(el, { clearProps: 'transform,willChange' }),
+            scrollTrigger: {
+              trigger: el,
+              /* Text enters earlier than images so reading flow feels natural */
+              start: 'top 80%',
+              toggleActions: 'play none none reverse'
+            }
           }
-        }
-      );
-    });
+        );
+      });
+    }
 
     /* ── Text card background fade-in (matches .fu timing) ── */
-    document.querySelectorAll('#summit .chapter-intro, #via-ferrata .chapter-intro, #summit .split-text, #via-ferrata .split-text, #summit .pullquote, .closing-band').forEach(el => {
-      gsap.to(el, {
-        '--card-alpha': 0.78,
-        duration: 0.9,
-        ease: 'power2.out',
-        scrollTrigger: {
-          trigger: el,
-          start: 'top 85%',
-          toggleActions: 'play none none reverse'
-        }
+    const cardBgEls = document.querySelectorAll('#summit .chapter-intro, #via-ferrata .chapter-intro, #summit .split-text, #via-ferrata .split-text, #summit .pullquote, .closing-band');
+    if (REDUCE_MOTION) {
+      gsap.set(cardBgEls, { '--card-alpha': 0.78 });
+    } else {
+      cardBgEls.forEach(el => {
+        gsap.to(el, {
+          '--card-alpha': 0.78,
+          duration: 0.9,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 85%',
+            toggleActions: 'play none none reverse'
+          }
+        });
       });
-    });
+    }
 
     /* ── Section heading letter-split + stagger reveal ──────────────────
        Each .ch-heading and .par-heading has its text wrapped letter-by-
@@ -1620,6 +1795,11 @@
       });
 
       const letters = heading.querySelectorAll('.heading-letter');
+
+      if (REDUCE_MOTION) {
+        gsap.set(letters, { opacity: 1, y: 0 });
+        return;
+      }
 
       /* Set invisible before first paint */
       gsap.set(letters, { opacity: 0, y: 52 });
@@ -1809,26 +1989,10 @@
       let curBg = STOPS[0].bg.slice(), curLn = STOPS[0].ln.slice();
       let tgtBg = curBg.slice(),       tgtLn = curLn.slice();
 
-      window.addEventListener('scroll', () => {
-        const max = document.documentElement.scrollHeight - innerHeight;
-        const c = palette(max > 0 ? scrollY / max : 0);
-        tgtBg = c.bg; tgtLn = c.ln;
-      }, { passive: true });
-
-      let t0 = null, fn = 0;
-      function draw(ts) {
-        if (!t0) t0 = ts;
-        const t = (ts - t0) * SPD;
-        fn++;
-        if (mob && fn & 1) { requestAnimationFrame(draw); return; } /* 30 fps on mobile */
-
-        /* Smooth colour blend toward scroll target */
-        for (let i = 0; i < 3; i++) {
-          curBg[i] += (tgtBg[i] - curBg[i]) * 0.04;
-          curLn[i] += (tgtLn[i] - curLn[i]) * 0.04;
-        }
-
-
+      /* Renders one frame at time t using the current blended colours.
+         Shared by the continuous animation loop and the static
+         reduced-motion draw below. */
+      function renderFrame(t) {
         /* Fill background */
         ctx.fillStyle = `rgb(${~~curBg[0]},${~~curBg[1]},${~~curBg[2]})`;
         ctx.fillRect(0, 0, W, H);
@@ -1843,7 +2007,7 @@
             if (v > fmax) fmax = v;
           }
         }
-        if (fmax - fmin < 0.01) { requestAnimationFrame(draw); return; }
+        if (fmax - fmin < 0.01) return;
 
         const sx = W/(GW-1), sy = H/(GH-1);
         const lR = ~~curLn[0], lG = ~~curLn[1], lB = ~~curLn[2];
@@ -1871,6 +2035,44 @@
           }
           ctx.stroke();
         }
+      }
+
+      if (REDUCE_MOTION) {
+        /* No continuous drift/animation loop — render one static terrain
+           frame and only redraw (instantly, no blend) when the scroll
+           position actually changes the colour palette. */
+        function staticDraw() {
+          const max = document.documentElement.scrollHeight - innerHeight;
+          const c = palette(max > 0 ? scrollY / max : 0);
+          curBg = c.bg; curLn = c.ln;
+          renderFrame(0);
+        }
+        staticDraw();
+        window.addEventListener('scroll', staticDraw, { passive: true });
+        window.addEventListener('resize', staticDraw, { passive: true });
+        return;
+      }
+
+      window.addEventListener('scroll', () => {
+        const max = document.documentElement.scrollHeight - innerHeight;
+        const c = palette(max > 0 ? scrollY / max : 0);
+        tgtBg = c.bg; tgtLn = c.ln;
+      }, { passive: true });
+
+      let t0 = null, fn = 0;
+      function draw(ts) {
+        if (!t0) t0 = ts;
+        const t = (ts - t0) * SPD;
+        fn++;
+        if (mob && fn & 1) { requestAnimationFrame(draw); return; } /* 30 fps on mobile */
+
+        /* Smooth colour blend toward scroll target */
+        for (let i = 0; i < 3; i++) {
+          curBg[i] += (tgtBg[i] - curBg[i]) * 0.04;
+          curLn[i] += (tgtLn[i] - curLn[i]) * 0.04;
+        }
+
+        renderFrame(t);
         requestAnimationFrame(draw);
       }
       requestAnimationFrame(draw);
