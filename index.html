@@ -25,7 +25,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Inter:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Playfair+Display:wght@700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Inter:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Playfair+Display:ital,wght@0,700;1,700&display=swap"
     rel="stylesheet">
   <link rel="preload" as="image" href="images/webp/d5-kk.webp" fetchpriority="high">
   <style>
@@ -60,7 +60,7 @@
       --accent: #C05A38;
       --bg: #0D0D0D;
       --text: #F5F0EB;
-      --dim: #6E6560;
+      --dim: #8A837C;
     }
 
     html {
@@ -648,9 +648,9 @@
     }
 
     .pullquote p {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Playfair Display', serif;
       font-size: clamp(1.6rem, 3.2vw, 3.2rem);
-      font-weight: 300;
+      font-weight: 700;
       font-style: italic;
       line-height: 1.35;
     }
@@ -757,6 +757,28 @@
       color: var(--text);
       font-size: .88rem;
       letter-spacing: .05em;
+    }
+
+
+    /* ─── Nav glassmorphism ─── */
+    #nav-glass {
+      position: fixed;
+      inset: 0 0 auto;
+      z-index: 99;
+      height: 96px;
+      background: transparent;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity .45s ease;
+    }
+
+    #nav-glass.scrolled {
+      opacity: 1;
+      background: linear-gradient(
+        to bottom,
+        rgba(5, 5, 9, 0.55) 0%,
+        transparent 100%
+      );
     }
 
 
@@ -1107,6 +1129,8 @@
   <div id="bg-overlay" aria-hidden="true"></div>
 
   <div id="scroll-track"><div id="scroll-thumb"></div></div>
+
+  <div id="nav-glass" aria-hidden="true"></div>
 
   <!-- ── Nav ── -->
   <nav>
@@ -2242,6 +2266,23 @@
        settled — prevents the via-ferrata (and other late) sections from
        firing at stale scroll offsets */
     window.addEventListener('load', () => ScrollTrigger.refresh());
+  </script>
+
+  <script>
+    /* ── Nav glassmorphism on scroll ─────────────────────────────────────
+       A separate low-z element sits behind the nav and gains
+       backdrop-filter + semi-transparent background once the user
+       scrolls past the hero, without interfering with the nav's
+       mix-blend-mode: difference treatment.
+    ────────────────────────────────────────────────────────────────────── */
+    (function () {
+      const glass = document.getElementById('nav-glass');
+      if (!glass) return;
+      function check() { glass.classList.toggle('scrolled', window.scrollY > 80); }
+      window.addEventListener('scroll', check, { passive: true });
+      check();
+    })();
+
   </script>
 </body>
 
