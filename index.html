@@ -198,6 +198,11 @@
       border-radius: 2px;
     }
 
+    /* ─── Back to top (mobile only) ─── */
+    .back-to-top {
+      display: none;
+    }
+
     /* ─── Hero ─── */
     #hero {
       position: relative;
@@ -709,8 +714,41 @@
         display: none;
       }
 
+      .nav-logo {
+        display: none;
+      }
+
       .scroll-cue {
         display: none;
+      }
+
+      .back-to-top {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        right: 1.25rem;
+        bottom: 1.25rem;
+        z-index: 100;
+        width: 2.75rem;
+        height: 2.75rem;
+        border-radius: 50%;
+        border: 1px solid rgba(245, 240, 235, 0.25);
+        background: rgba(13, 13, 13, 0.55);
+        color: var(--text);
+        font-size: 1.1rem;
+        line-height: 1;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(8px);
+        backdrop-filter: blur(6px);
+        transition: opacity .25s ease, transform .25s ease;
+      }
+
+      .back-to-top.visible {
+        opacity: 1;
+        pointer-events: all;
+        transform: translateY(0);
       }
 
       .hero-content {
@@ -847,6 +885,7 @@
     </ul>
   </nav>
 
+  <button id="back-to-top" class="back-to-top" aria-label="Back to top">&uarr;</button>
 
   <!-- ══════════════════════════════════════════
      HERO
@@ -1260,6 +1299,17 @@
       window.addEventListener('scroll', updateThumb, { passive: true });
       window.addEventListener('resize', updateThumb, { passive: true });
       updateThumb();
+    })();
+
+    /* ── Back to top (mobile only) ── */
+    (function () {
+      const btn = document.getElementById('back-to-top');
+      function toggle() {
+        btn.classList.toggle('visible', window.scrollY > window.innerHeight * 0.6);
+      }
+      window.addEventListener('scroll', toggle, { passive: true });
+      toggle();
+      btn.addEventListener('click', () => window.scrollTo({ top: 0 }));
     })();
 
     /* ── Hero entrance (title handled separately by scramble below) ── */
