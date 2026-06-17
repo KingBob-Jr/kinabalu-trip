@@ -886,6 +886,7 @@
          a second, sharp copy sits on top at full width / natural
          height so every hiker stays visible — no cropping. */
       #hero {
+        display: block;
         height: 100svh;
         min-height: 480px;
       }
@@ -911,11 +912,12 @@
         transform: scale(1.15);
       }
 
+      /* Top-aligned, just below the fixed nav's menu icon, instead of
+         centred — minimises empty blurred space above the photo. */
       #hero-bg {
-        position: absolute;
-        inset: auto 0;
-        top: 50%;
-        transform: translateY(-50%);
+        position: relative;
+        inset: auto;
+        margin-top: 5rem;
       }
 
       #hero-bg img {
@@ -925,7 +927,8 @@
       }
 
       .hero-content {
-        padding: 0 1.5rem 3rem;
+        position: relative;
+        padding: 1.25rem 1.5rem 3rem;
       }
 
       .hero-eye {
