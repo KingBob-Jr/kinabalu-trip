@@ -249,8 +249,15 @@
     #hero-bg {
       position: absolute;
       inset: -15% 0;
-      background: url('images/webp/d5-kk.webp') center 30% / cover no-repeat;
       will-change: transform;
+    }
+
+    #hero-bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 30%;
+      display: block;
     }
 
     .hero-overlay {
@@ -867,8 +874,33 @@
         opacity: 1;
       }
 
+      #hero {
+        height: 100svh;
+        min-height: 480px;
+      }
+
+      @supports (height: 100dvh) {
+        #hero {
+          height: 100dvh;
+        }
+      }
+
       .hero-content {
-        padding: 0 1.5rem 3.5rem;
+        padding: 0 1.5rem 3rem;
+      }
+
+      .hero-eye {
+        font-size: .6rem;
+        margin-bottom: .75rem;
+      }
+
+      .hero-title {
+        font-size: clamp(2.75rem, 15vw, 4.5rem);
+      }
+
+      .hero-sub {
+        margin-top: 1.1rem;
+        max-width: 30ch;
       }
 
       .chapter-intro {
@@ -1025,7 +1057,9 @@
      HERO
 ══════════════════════════════════════════ -->
   <section id="hero">
-    <div id="hero-bg"></div>
+    <div id="hero-bg">
+      <img src="images/webp/d5-kk.webp" alt="Hikers pausing on the granite slopes of Mount Kinabalu, mist rolling over the ridge above" fetchpriority="high" width="3000" height="2000">
+    </div>
     <div class="hero-overlay"></div>
     <div class="hero-content">
       <p class="hero-eye" id="hero-eye">Sabah, Malaysia &middot; May 2026</p>
