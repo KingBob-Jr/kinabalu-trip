@@ -11,6 +11,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Inter:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Playfair+Display:wght@700&display=swap"
     rel="stylesheet">
+  <link rel="preload" as="image" href="images/webp/d5-kk.webp" fetchpriority="high">
   <style>
     /* ─── Reset ─── */
     *,
@@ -31,6 +32,12 @@
       -webkit-user-select: none;
       -webkit-user-drag: none;
       user-drag: none;
+      opacity: 0;
+      transition: opacity .5s ease;
+    }
+
+    img.loaded {
+      opacity: 1;
     }
 
     :root {
@@ -150,6 +157,7 @@
     }
 
     .nav-links a {
+      position: relative;
       color: #fff;
       text-decoration: none;
       font-size: .67rem;
@@ -159,8 +167,35 @@
       transition: opacity .2s;
     }
 
-    .nav-links a:hover {
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -.5rem;
+      height: 1px;
+      background: currentColor;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform .3s ease;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
       opacity: 1;
+    }
+
+    .nav-links a:hover::after,
+    .nav-links a.active::after {
+      transform: scaleX(1);
+    }
+
+    /* ─── Keyboard focus ─── */
+    .nav-logo:focus-visible,
+    .nav-links a:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 4px;
+      border-radius: 2px;
     }
 
     /* ─── Hero ─── */
@@ -1198,6 +1233,14 @@
   <script>
     gsap.registerPlugin(ScrollTrigger);
 
+    /* ── Image fade-in on load ── */
+    document.querySelectorAll('img').forEach(img => {
+      if (img.complete && img.naturalWidth !== 0) { img.classList.add('loaded'); return; }
+      const mark = () => img.classList.add('loaded');
+      img.addEventListener('load', mark, { once: true });
+      img.addEventListener('error', mark, { once: true });
+    });
+
     /* ── Custom scrollbar ── */
     (function () {
       const thumb = document.getElementById('scroll-thumb');
@@ -1287,6 +1330,18 @@
           scrollTrigger: { trigger: id, start: 'top bottom', end: 'bottom top', scrub: true }
         }
       );
+    });
+
+    /* ── Active nav link on scroll ── */
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      const target = document.querySelector(link.getAttribute('href'));
+      if (!target) return;
+      ScrollTrigger.create({
+        trigger: target,
+        start: 'top center',
+        end: 'bottom center',
+        toggleClass: { targets: link, className: 'active' }
+      });
     });
 
     /* ── Full-bleed image parallax ── */
