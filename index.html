@@ -883,8 +883,10 @@
       /* Mobile hero: a full-screen, heavily blurred + darkened copy
          of the photo fills the section as ambient background (its
          cropping doesn't matter since it's just texture/colour), while
-         a second, sharp copy sits on top at full width / natural
-         height so every hiker stays visible — no cropping. */
+         a second, sharp copy sits on top showing the photo's full
+         height — no vertical crop, so every hiker stays visible — and
+         the title block overlays its lower portion on a dark scrim
+         that rises from the photo's bottom edge. */
       #hero {
         display: block;
         height: 100svh;
@@ -913,17 +915,17 @@
       }
 
       /* Flush to the very top of the screen — the fixed nav overlays
-         on top of it. Cropped on all four sides to zoom in on the
+         on top of it. Cropped left/right only, to zoom in on the
          hikers as much as possible while keeping all five fully in
-         frame: top/bottom trims the sky/mist and foreground rock,
-         left/right trims the empty margin out to the two outer
-         hikers' arms. Crop window measured from the source photo
-         (3000x2000): visible box is x 440–2620, y 320–1750. */
+         frame: trims the empty margin out to the two outer hikers'
+         arms. No top/bottom crop, so the full photo height shows.
+         Crop window measured from the source photo (3000x2000):
+         visible box is x 440–2620, y 0–2000. */
       #hero-bg {
         position: relative;
         inset: auto;
         overflow: hidden;
-        height: 65.59vw;
+        height: 91.74vw;
       }
 
       #hero-bg img {
@@ -931,26 +933,59 @@
         height: auto;
         object-fit: unset;
         object-position: unset;
-        transform: translate(-20.18vw, -14.68vw);
+        transform: translateX(-20.18vw);
+      }
+
+      /* Scoped to the photo's own height (not the full hero) so the
+         scrim sits behind the title block at the bottom of the image
+         rather than darkening the ambient fill below it. */
+      .hero-overlay {
+        inset: 0 0 auto 0;
+        height: 91.74vw;
+        background: linear-gradient(to bottom,
+            rgba(13, 13, 13, 0) 40%,
+            rgba(13, 13, 13, .92) 100%);
       }
 
       .hero-content {
-        position: relative;
-        padding: 1.25rem 1.5rem 3rem;
+        position: absolute;
+        inset: 0 0 auto 0;
+        height: 91.74vw;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 1.25rem 1.5rem 1.25rem;
+        --hero-title-size: clamp(2.25rem, 13vw, 3.75rem);
       }
 
+      /* Single column sized to KINABALU's own rendered width (locked
+         in by the scramble script via --title-w, see JS below), so
+         the eyebrow — right-aligned within it, below — lands flush
+         with the title's right edge. max-content is only a fallback
+         for the brief moment before that script runs. */
+      .hero-text-top {
+        display: grid;
+        grid-template-columns: var(--title-w, max-content);
+      }
+
+      /* Sized as a fraction of the title's own responsive clamp, so
+         the eyebrow shrinks and grows in lockstep with KINABALU
+         instead of scaling on its own separate (flatter) curve. */
       .hero-eye {
-        font-size: .6rem;
-        margin-bottom: .75rem;
+        font-size: clamp(.4rem, calc(var(--hero-title-size) * .16), .58rem);
+        margin-bottom: .5em;
+        text-align: right;
       }
 
       .hero-title {
-        font-size: clamp(2.75rem, 15vw, 4.5rem);
+        font-size: var(--hero-title-size);
       }
 
       .hero-sub {
-        margin-top: 1.1rem;
-        max-width: 30ch;
+        font-size: clamp(.68rem, 3vw, .78rem);
+        line-height: 1.45;
+        margin-top: .85rem;
+        max-width: none;
       }
 
       .chapter-intro {
@@ -1115,8 +1150,10 @@
     </div>
     <div class="hero-overlay"></div>
     <div class="hero-content">
-      <p class="hero-eye" id="hero-eye">Sabah, Malaysia &middot; May 2026</p>
-      <h1 class="hero-title" id="hero-title">KINABALU</h1>
+      <div class="hero-text-top">
+        <p class="hero-eye" id="hero-eye">Sabah, Malaysia &middot; May 2026</p>
+        <h1 class="hero-title" id="hero-title">KINABALU</h1>
+      </div>
       <p class="hero-sub" id="hero-sub">A journey to the roof of Borneo &mdash;&nbsp;4,095&nbsp;metres above the South
         China Sea.</p>
     </div>
@@ -1583,7 +1620,35 @@
     ───────────────────────────────────────────────────────────────────── */
     (function scrambleHero() {
       const el = document.getElementById('hero-title');
+      const wrap = document.querySelector('.hero-text-top');
       const FINAL = 'KINABALU';
+
+      /* Mobile right-aligns the eyebrow to KINABALU's width via a grid
+         column sized from this custom property (see mobile CSS). Random
+         scramble letters render at slightly different widths each frame
+         than the real word, so deriving the column live from whatever
+         text is currently on screen made the eyebrow jitter left/right
+         during the effect. Locking it to the FINAL word's width up front
+         keeps it perfectly still for the whole animation.
+         --title-w is cleared before each measurement: once set, the
+         title's own box stretches to fill that grid column, so reading
+         its width without clearing first just echoes the old (possibly
+         stale, e.g. from a wider/landscape layout) value back forever
+         instead of the title's real current size — which is what made
+         the eyebrow shoot off-screen after a landscape-to-portrait
+         resize. */
+      const lockTitleWidth = () => {
+        if (!wrap) return;
+        wrap.style.removeProperty('--title-w');
+        const prev = el.textContent;
+        el.textContent = FINAL;
+        const w = el.getBoundingClientRect().width;
+        el.textContent = prev;
+        wrap.style.setProperty('--title-w', w + 'px');
+      };
+      lockTitleWidth();
+      window.addEventListener('resize', lockTitleWidth);
+
       if (REDUCE_MOTION) { el.textContent = FINAL; return; }
       const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
       const DURATION = 3400; /* ms — total time from first tick to last lock */
